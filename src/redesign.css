@@ -337,3 +337,30 @@ body {background:var(--canvas)}
   .mori-weather-card .mori-weather{grid-template-columns:1fr;gap:12px}
   .mori-weather-secondary{border:0;padding:0;display:grid;grid-template-columns:1fr 1fr}
 }
+
+/* Avatar compartilhado — foto do casal para as duas contas autorizadas. */
+.avatar.mori-shared-avatar {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 44px;
+  overflow: hidden;
+  padding: 0;
+  border: 2px solid #d5be88;
+  border-radius: 50%;
+  background: #eee7d7;
+  box-shadow: 0 0 0 2px #fff8eb;
+}
+.avatar.mori-shared-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  border-radius: 50%;
+}
+.avatar.mori-shared-avatar span {
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+}

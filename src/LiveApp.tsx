@@ -24,6 +24,22 @@ function ModuleLoading() {
   return <div className="photo-wait" role="status"><LoaderCircle className="spinning" size={21}/> Abrindo módulo...</div>;
 }
 
+function SharedCoupleAvatar({ email }: { email?: string }) {
+  const [imageFailed, setImageFailed] = useState(false);
+  return <div className="avatar mori-shared-avatar" title={email || 'Mori Bonsai'}>
+    {imageFailed
+      ? <span>{(email?.slice(0, 2) || 'MB').toUpperCase()}</span>
+      : <img
+          src={`${import.meta.env.BASE_URL}assets/avatar-duda-gui.webp`}
+          alt="Duda e Gui"
+          width={44}
+          height={44}
+          onError={() => setImageFailed(true)}
+        />}
+  </div>;
+}
+
+
 type Page = 'dashboard' | 'collection' | 'library' | 'history' | 'calendar' | 'planner' | 'wishlist' | 'trash' | 'settings';
 type CollectionRow = { id: string; name: string };
 type PlantRow = {
@@ -260,7 +276,7 @@ export default function LiveApp() {
       </div>
     </aside>
     {mobileMenu && <button className="mobile-backdrop" aria-label="Fechar menu" onClick={()=>setMobileMenu(false)}/>}
-    <div className="main-column"><header className="topbar"><div className="topbar-left"><button className="mobile-menu icon-button" aria-label="Abrir menu" onClick={()=>setMobileMenu(true)}><Menu size={23}/></button><span className="breadcrumb">Mori Bonsai</span><ChevronRight size={15}/><strong>{heading[page]}</strong></div><div className="topbar-right"><span className="demo-pill"><span/> Dados sincronizados</span><div className="avatar" title={user.email}>{(user.email?.slice(0,2) || 'MB').toUpperCase()}</div></div></header>
+    <div className="main-column"><header className="topbar"><div className="topbar-left"><button className="mobile-menu icon-button" aria-label="Abrir menu" onClick={()=>setMobileMenu(true)}><Menu size={23}/></button><span className="breadcrumb">Mori Bonsai</span><ChevronRight size={15}/><strong>{heading[page]}</strong></div><div className="topbar-right"><span className="demo-pill"><span/> Dados sincronizados</span><SharedCoupleAvatar email={user.email}/></div></header>
       <main className="main-content">
         {error && <div className="live-message live-error" role="alert"><AlertCircle size={18}/><span>{error}</span><button className="message-close" aria-label="Fechar erro" onClick={()=>setError('')}><X size={15}/></button></div>}
         {notice && <div className="live-message live-success" role="status"><CheckCircle2 size={18}/><span>{notice}</span><button className="message-close" aria-label="Fechar aviso" onClick={()=>setNotice('')}><X size={15}/></button></div>}
