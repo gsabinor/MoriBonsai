@@ -1,10 +1,11 @@
 import { useCallback, useEffect, useMemo, useState } from 'react';
-import type { FormEvent } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import {
   AlertCircle, CalendarDays, CheckCircle2, ClipboardList, Clock3, Edit3, Filter,
   Flower2, LoaderCircle, Plus, RefreshCcw, Search, Trash2, X,
 } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { uploadMoriMedia } from '../lib/mediaUpload';
 
 type PlantOption = { id: string; name: string };
 export type CareLog = {
@@ -43,13 +44,15 @@ const showDate = (v: string) => new Date(`${v}T12:00:00`).toLocaleDateString('pt
 const toError = (err: unknown) => err instanceof Error ? err.message : String(err);
 
 function CareEditor({
-  current, plants, selectedPlantId, busy, save, close,
+  current, plants, selectedPlantId, busy, save, close, collectionId, afterMediaUpload,
 }: {
   current: CareLog | null;
   plants: PlantOption[];
   selectedPlantId: string;
   busy: boolean;
-  save: (payload: CarePayload, id: string | null) => Promise<void>;
+  save: (payload: CarePayload, id: string | null) => Promise<string>;
+  collectionId: string;
+  afterMediaUpload: () => Promise<void>;
   close: () => void;
 }) {
   const [plantId, setPlantId] = useState(current?.plant_id ?? selectedPlantId ?? plants[0]?.id ?? '');
@@ -60,6 +63,9 @@ function CareEditor({
   const [outcome, setOutcome] = useState<Outcome>(current?.outcome ?? 'not_tested');
   const [outcomeNotes, setOutcomeNotes] = useState(current?.outcome_notes ?? '');
   const [error, setError] = useState('');
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+  const [uploading, setUploading] = useState(false);
+  const [uploadStatus, setUploadStatus] = useState('');
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -68,7 +74,7 @@ function CareEditor({
     if (date > localToday()) { setError('O histórico registra manejos realizados. A data não pode ser futura.'); return; }
     if (!title.trim()) { setError('Informe uma descrição curta do manejo.'); return; }
     try {
-      await save({
+      const logId = await save({
         plant_id: plantId,
         category,
         occurred_on: date,
@@ -77,13 +83,26 @@ function CareEditor({
         outcome,
         outcome_notes: outcomeNotes.trim() || null,
       }, current?.id ?? null);
+      if (mediaFile) {
+        setUploading(true);
+        try {
+          await uploadMoriMedia({
+            collectionId, plantId, file: mediaFile, careLogId: logId, onStage: setUploadStatus,
+            capturedOn: date, caption: `${category} — ${title.trim()}${notes.trim() ? ` · ${notes.trim().slice(0,250)}` : ''}`.slice(0,500),
+          });
+          await afterMediaUpload();
+        } catch (err) {
+          // O histórico já foi salvo. Não repetir o cadastro do manejo.
+          window.alert(`O manejo foi salvo, mas a mídia não foi anexada: ${toError(err)}. Você poderá enviá-la depois pela galeria.`);
+        } finally { setUploading(false); setUploadStatus(''); }
+      }
       close();
     } catch (e) { setError(toError(e)); }
   }
 
-  return <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget && !busy) close(); }}>
+  return <div className="modal-backdrop" onMouseDown={e => { if (e.target === e.currentTarget && !busy && !uploading) close(); }}>
     <section role="dialog" aria-modal="true" aria-labelledby="care-editor-heading" className="live-modal care-modal">
-      <button className="modal-close" aria-label="Fechar" onClick={close} disabled={busy}><X size={20}/></button>
+      <button className="modal-close" aria-label="Fechar" onClick={close} disabled={busy || uploading}><X size={20}/></button>
       <span className="eyebrow">DIÁRIO DE CULTIVO</span>
       <h2 id="care-editor-heading">{current ? 'Editar manejo' : 'Registrar manejo'}</h2>
       <p>Registre uma intervenção que já ocorreu. As duas contas autorizadas poderão consultar e editar o histórico.</p>
@@ -120,10 +139,15 @@ function CareEditor({
         <label>Resultado observado / aprendizados
           <textarea rows={3} maxLength={5000} disabled={busy} value={outcomeNotes} onChange={e => setOutcomeNotes(e.target.value)} placeholder="Evolução depois do manejo; riscos percebidos ou mudanças recomendadas..."/>
         </label>
+        <label>Anexar foto ou vídeo ao manejo (opcional)
+          <input type="file" accept="image/jpeg,image/png,image/webp,video/mp4,video/webm" disabled={busy || uploading} onChange={(event: ChangeEvent<HTMLInputElement>) => setMediaFile(event.target.files?.[0] ?? null)}/>
+          <small>A mídia será salva na galeria do exemplar e vinculada a este manejo. Fotos até 15 MB, vídeos MP4/WebM até 20 MB. O manejo é salvo primeiro.</small>
+        </label>
+        {uploadStatus && <div className="live-message" role="status">{uploadStatus}</div>}
         {error && <div className="live-message live-error" role="alert"><AlertCircle size={17}/><span>{error}</span></div>}
         <div className="live-actions">
-          <button type="button" className="button button-outline" onClick={close} disabled={busy}>Cancelar</button>
-          <button type="submit" className="button button-primary" disabled={busy || !plantId || !title.trim()}>
+          <button type="button" className="button button-outline" onClick={close} disabled={busy || uploading}>Cancelar</button>
+          <button type="submit" className="button button-primary" disabled={busy || uploading || !plantId || !title.trim()}>
             {busy ? <LoaderCircle className="spinning" size={17}/> : <CheckCircle2 size={17}/>} {busy ? 'Salvando...' : 'Salvar manejo'}
           </button>
         </div>
@@ -140,6 +164,7 @@ export default function CareHistory({
   initialPlantId?: string;
 }) {
   const [rows, setRows] = useState<CareLog[]>([]);
+  const [mediaByLog, setMediaByLog] = useState<Record<string, {url: string; kind: 'image' | 'video'; caption: string | null}[]>>({});
   const [loading, setLoading] = useState(false);
   const [moreLoading, setMoreLoading] = useState(false);
   const [hasMore, setHasMore] = useState(false);
@@ -170,6 +195,27 @@ export default function CareHistory({
       const next = (data ?? []) as CareLog[];
       setRows(prev => append ? [...prev, ...next] : next);
       setHasMore(next.length === PAGE_SIZE);
+      if (next.length) {
+        // Busca anexos em lote para evitar uma consulta por manejo.
+        const ids = next.map(row => row.id);
+        const {data: attachments, error: attachmentError} = await supabase.from('plant_photos')
+          .select('care_log_id,storage_path,media_type,caption')
+          .eq('collection_id',collectionId).in('care_log_id',ids).limit(200);
+        if (!attachmentError && attachments?.length) {
+          const paths = attachments.map(a => a.storage_path as string);
+          const {data: signed, error: signError} = await supabase.storage.from('mori-photos').createSignedUrls(paths,900);
+          if (!signError) {
+            const updates: Record<string, {url:string;kind:'image'|'video';caption:string|null}[]> = {};
+            attachments.forEach((row,i)=>{
+              const url = signed?.[i]?.signedUrl;
+              const careLogId = row.care_log_id as string | null;
+              if (!careLogId || !url) return;
+              (updates[careLogId] ??= []).push({url,kind:row.media_type === 'video' ? 'video' : 'image',caption:row.caption as string|null});
+            });
+            setMediaByLog(prev => append ? {...prev,...updates} : updates);
+          }
+        } else if (!append) setMediaByLog({});
+      } else if (!append) setMediaByLog({});
     } catch (e) { setError(`Não foi possível consultar o histórico: ${toError(e)}`); }
     finally { setLoading(false); setMoreLoading(false); }
   }, [collectionId]);
@@ -185,9 +231,10 @@ export default function CareHistory({
     );
   }, [rows, search, plantFilter, categoryFilter, plantNames]);
 
-  async function save(payload: CarePayload, id: string | null) {
+  async function save(payload: CarePayload, id: string | null): Promise<string> {
     if (!supabase) throw new Error('Conexão Supabase indisponível.');
     setSaving(true);
+    let savedId = id;
     try {
       if (id) {
         // O vínculo entre um registro existente e o exemplar não pode ser modificado.
@@ -210,9 +257,12 @@ export default function CareHistory({
           .select('id').single();
         if (insertError) throw insertError;
         if (!data) throw new Error('O Supabase não confirmou o registro do manejo.');
+        savedId = data.id;
       }
       setNotice(id ? 'Manejo atualizado no Supabase.' : 'Manejo registrado no Supabase.');
       await fetchRows(0, false);
+      if (!savedId) throw new Error('Identificador do manejo não encontrado.');
+      return savedId;
     } finally { setSaving(false); }
   }
 
@@ -267,6 +317,7 @@ export default function CareHistory({
         <p className="care-plant">🌿 {plantNames.get(log.plant_id) ?? 'Exemplar não disponível'}</p>
         {log.notes && <p className="care-description">{log.notes}</p>}
         {log.outcome_notes && <div className="care-result"><b>Resultado / aprendizado:</b> {log.outcome_notes}</div>}
+        {mediaByLog[log.id]?.length ? <div className="mori-care-media" aria-label="Mídias deste manejo">{mediaByLog[log.id].map((media,index) => media.kind === 'video' ? <video key={index} controls preload="none" playsInline src={media.url} aria-label={`Vídeo do manejo ${log.title}`}/> : <a key={index} href={media.url} target="_blank" rel="noreferrer"><img src={media.url} loading="lazy" alt={media.caption || `Foto do manejo ${log.title}`}/></a>)}</div> : null} 
         <div className="care-item-actions">
           <button className="button button-outline" onClick={() => setEditor(log)}><Edit3 size={15}/> Editar</button>
           <button className="button live-danger" disabled={Boolean(removingId)} onClick={() => void remove(log)}>{removingId === log.id ? <LoaderCircle className="spinning" size={15}/> : <Trash2 size={15}/>} Excluir</button>
@@ -275,6 +326,6 @@ export default function CareHistory({
     </div>}
     {!loading && hasMore && <div className="care-more"><button className="button button-outline" disabled={moreLoading} onClick={() => void fetchRows(rows.length, true)}>{moreLoading ? <LoaderCircle size={16} className="spinning"/> : <Plus size={16}/>} {moreLoading ? 'Carregando...' : 'Carregar mais registros'}</button></div>}
     <p className="care-footnote">Este histórico documenta intervenções realizadas. Ele não programa regas automáticas nem substitui a avaliação das condições de cada planta.</p>
-    {editor && <CareEditor key={editor === 'new' ? 'care-new' : editor.id} current={editor === 'new' ? null : editor} selectedPlantId={plantFilter || initialPlantId || plants[0]?.id || ''} plants={plants} busy={saving} save={save} close={() => setEditor(null)} />}
+    {editor && <CareEditor key={editor === 'new' ? 'care-new' : editor.id} current={editor === 'new' ? null : editor} selectedPlantId={plantFilter || initialPlantId || plants[0]?.id || ''} plants={plants} busy={saving} save={save} collectionId={collectionId} afterMediaUpload={async()=>{await fetchRows(0,false);}} close={() => setEditor(null)} />}
   </div>;
 }

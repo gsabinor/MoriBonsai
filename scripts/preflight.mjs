@@ -12,7 +12,7 @@ const requireFile = (path) => {
 };
 for (const f of ['index.html','src/main.tsx','src/LiveApp.tsx','vite.config.ts',
   '.github/workflows/deploy.yml','public/assets/mori-forest-hero.webp','public/assets/mori-dragon-logo.webp',
-  'supabase/14_planos_desejos.sql','.env.example']) requireFile(f);
+  'supabase/14_planos_desejos.sql','supabase/16_colecao_manejos_midias.sql','.env.example']) requireFile(f);
 const config = existsSync(resolve(root,'vite.config.ts')) ? readFileSync(resolve(root,'vite.config.ts'),'utf8') : '';
 if (!config.includes('GITHUB_REPOSITORY') || !config.includes('GITHUB_PAGES'))
   errors.push('A configuração do caminho-base do GitHub Pages precisa ser revisada.');

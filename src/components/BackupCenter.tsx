@@ -16,7 +16,7 @@ export default function BackupCenter({collectionId,collectionName,email}:Props){
     try{
       const result=await exportBackup(collectionId,collectionName,includePhotos,setProgress);
       downloadBackup(result.blob,result.filename);
-      setSuccess(`Arquivo preparado: ${result.records} registros e ${result.images} fotografias. Confira se o ZIP foi baixado e abra-o antes de considerá-lo um backup válido.`);
+      setSuccess(`Arquivo preparado: ${result.records} registros e ${result.images} arquivos de mídia. Confira se o ZIP foi baixado e abra-o antes de considerá-lo um backup válido.`);
     }catch(e){setError(e instanceof Error?e.message:String(e));}
     finally{setLoading(false);setProgress(null);}
   }
@@ -29,8 +29,8 @@ export default function BackupCenter({collectionId,collectionName,email}:Props){
     </div>
     <section className="section-card mori-backup-panel" aria-labelledby="backup-title">
       <div className="mori-backup-title"><Archive size={24}/><div><span className="eyebrow">CÓPIA DE SEGURANÇA</span><h2 id="backup-title">Exportar coleção</h2></div></div>
-      <p>O arquivo ZIP inclui os registros dos exemplares, fichas técnicas (inclusive revisões), manejos, planejamentos, membros, listas de desejos e itens da Lixeira acessíveis à sua conta. As imagens ficam em uma pasta separada dentro do ZIP se a opção abaixo estiver marcada.</p>
-      <label className="mori-backup-check"><input type="checkbox" checked={includePhotos} disabled={loading} onChange={e=>setIncludePhotos(e.target.checked)}/><ImageIcon size={18}/><span>Incluir fotografias privadas (até 160 MB por exportação)</span></label>
+      <p>O arquivo ZIP inclui os registros dos exemplares, fichas técnicas (inclusive revisões), manejos, planejamentos, membros, listas de desejos e itens da Lixeira acessíveis à sua conta. As fotos e vídeos ficam em uma pasta separada dentro do ZIP se a opção abaixo estiver marcada.</p>
+      <label className="mori-backup-check"><input type="checkbox" checked={includePhotos} disabled={loading} onChange={e=>setIncludePhotos(e.target.checked)}/><ImageIcon size={18}/><span>Incluir fotografias e vídeos privados (até 160 MB por exportação)</span></label>
       <button className="button button-primary" type="button" onClick={()=>void start()} disabled={loading}>{loading?<LoaderCircle className="spinning" size={17}/>:<Download size={17}/>} {loading?'Preparando backup...':'Gerar e baixar backup ZIP'}</button>
       {progress && <div className="mori-backup-progress" role="status"><LoaderCircle className="spinning" size={16}/>{progress.step}</div>}
       {error && <p className="live-message live-error" role="alert"><AlertCircle size={17}/>{error}</p>}

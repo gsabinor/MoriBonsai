@@ -100,7 +100,7 @@ body {background:var(--canvas)}
 .mori-featured-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
 .mori-feature{border:1px solid #e8dcc6;background:#fffdf6;padding:7px;border-radius:11px;display:flex;align-items:stretch;gap:10px;color:#28422e;min-width:0;text-align:left}
 .mori-feature:hover{background:#f4f0e3}
-.mori-feature-photo{flex:0 0 38%;height:125px;border-radius:7px;overflow:hidden;display:grid;place-items:center;color:#557958;background:#e0e8d4}
+.mori-feature-photo{position:relative;flex:0 0 38%;height:125px;border-radius:7px;overflow:hidden;display:grid;place-items:center;color:#557958;background:#e0e8d4}
 .mori-feature-photo img{height:100%;width:100%;object-fit:cover}
 .mori-feature-copy{display:flex;flex-direction:column;gap:5px;align-items:flex-start;justify-content:center;min-width:0}
 .mori-feature-copy b{font-family:Georgia,serif;font-size:16px;font-weight:500;max-width:100%;overflow-wrap:anywhere}
@@ -364,3 +364,44 @@ body {background:var(--canvas)}
   width: 100%;
   height: 100%;
 }
+
+/* v1.4 — indicação de luminosidade e ambiente de cultivo */
+.mori-environment-hint{border:1px solid #b9c9aa;border-radius:12px;padding:12px 14px;background:#eff3e9;color:#294631;font-size:.9rem;line-height:1.5}
+.mori-environment-hint small{display:block;margin-top:4px;color:#5c6958}
+
+/* v1.4: videos na galeria */
+.photo-figure video{display:block;width:100%;height:190px;object-fit:contain;background:#172c21;border-radius:10px}
+
+/* v1.4 — anexos visuais nos manejos */
+.mori-care-media{display:flex;gap:10px;flex-wrap:wrap;margin:10px 0}
+.mori-care-media img,.mori-care-media video{width:160px;max-width:100%;height:120px;object-fit:cover;border-radius:12px;background:#17382d;border:1px solid #cfd8c6}
+.mori-care-media video{object-fit:contain}
+
+/* v1.4.3 — enquadramento fiel: modo inteiro e zoom nao destrutivo */
+.mori-cover-overlay{position:fixed;inset:0;z-index:130;display:grid;place-items:center;padding:18px;background:#12291ddd;overflow-y:auto}
+.mori-cover-editor{position:relative;width:min(96vw,600px);max-height:94vh;overflow:auto;padding:29px;background:#fffcf4;border:1px solid #e3dac9;border-radius:18px;box-shadow:0 22px 60px #06150d66}
+.mori-cover-editor h2{display:flex;gap:9px;align-items:center;font-family:Georgia,serif;font-size:27px;font-weight:400;color:#264832;margin:2px 0 12px}
+.mori-cover-editor>p{font-size:13px;line-height:1.6;color:#627562;margin:0 0 18px}
+.mori-cover-stage{position:relative;overflow:hidden;width:min(100%,450px);margin:0 auto;aspect-ratio:3/2;border-radius:13px;background:#e3e5d9;cursor:grab;touch-action:none;user-select:none;border:2px solid #b3c5ac}
+.mori-cover-stage:active{cursor:grabbing}
+.mori-cover-stage-whole{cursor:default;background:#e9ebdf}
+.mori-cover-stage>img{display:block;width:100%;height:100%;object-fit:cover;pointer-events:none;user-select:none;max-width:none;max-height:none}
+.mori-cover-stage-hint{pointer-events:none;position:absolute;bottom:10px;left:50%;transform:translateX(-50%);font-size:11px;color:#fff;background:#142e20b7;padding:7px 11px;border-radius:20px;white-space:nowrap}
+.mori-cover-modes{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:0 0 14px}
+.mori-cover-modes button{padding:11px 8px;border:1px solid #d9e4d4;border-radius:10px;background:#f7faf2;color:#4c6854;font-size:12px;font-weight:750;cursor:pointer}
+.mori-cover-modes button.selected{background:#e6f1e5;border-color:#638f68;color:#254e33}
+.mori-cover-modes button:disabled{opacity:.5;cursor:default}
+.mori-cover-zoom{display:grid;grid-template-columns:1fr auto;gap:6px;margin:16px 0 2px;color:#506f54;font-size:12px;font-weight:700}
+.mori-cover-zoom input{grid-column:1/-1;width:100%;accent-color:#386746}
+.mori-cover-sliders{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:16px}
+.mori-cover-sliders label{display:grid;gap:8px;font-size:12px;font-weight:700;color:#506f54}
+.mori-cover-sliders input{width:100%;accent-color:#386746}
+.mori-cover-footnote{font-size:11px;color:#738372;line-height:1.5;margin:12px 0 17px}
+.mori-cover-actions{display:flex;gap:9px;justify-content:flex-end;flex-wrap:wrap}
+@media(max-width:550px){.mori-cover-editor{padding:22px 16px}.mori-cover-editor h2{font-size:23px}.mori-cover-sliders{grid-template-columns:1fr}.mori-cover-modes button{font-size:11px}.mori-cover-actions .button{flex:1;padding:10px 9px;font-size:11px}}
+
+/* v1.4.4 — capas: permitir que o deslocamento da foto funcione em zoom alto. */
+.mori-cover-presets{display:flex;align-items:center;justify-content:flex-end;gap:7px;flex-wrap:wrap;margin:9px 0 12px;font-size:11px;color:#667c68}
+.mori-cover-presets button{padding:7px 11px;border:1px solid #ceddce;border-radius:9px;background:#f3f8f0;color:#34603f;cursor:pointer;font-size:11px;font-weight:700}
+.mori-cover-presets button:hover:not(:disabled){background:#e4f1e1}
+.mori-cover-presets button:disabled{opacity:.5;cursor:default}

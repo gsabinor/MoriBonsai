@@ -9,7 +9,9 @@ import {
 } from 'lucide-react';
 import MoriDashboard from './components/MoriDashboard';
 import { usePlantCovers } from './components/usePlantCovers';
+import type { CoverPosition } from './components/usePlantCovers';
 import { supabase } from './lib/supabase';
+import { coverFrameStyle } from './lib/coverFrame';
 
 // Cada módulo é carregado somente quando o usuário abre sua tela.
 const PhotoGallery = lazy(() => import('./components/PhotoGallery'));
@@ -48,12 +50,14 @@ type PlantRow = {
   name: string;
   scientific_name: string | null;
   species_id: string | null;
-  area: 'Jardim' | 'Área protegida';
+  area: 'Jardim' | 'Área protegida' | 'Apartamento';
+  estimated_age_years: number | null;
+  light_preference: 'Sol pleno' | 'Meia-sombra' | 'Sombra' | 'Não confirmado';
   acquired_on: string | null;
   notes: string | null;
   created_at: string;
 };
-type PlantInput = Pick<PlantRow, 'name' | 'scientific_name' | 'area' | 'acquired_on' | 'notes'>;
+type PlantInput = Pick<PlantRow, 'name' | 'scientific_name' | 'area' | 'acquired_on' | 'notes' | 'estimated_age_years' | 'light_preference'>;
 const links: { id: Page; title: string; icon: typeof LayoutDashboard }[] = [
   { id: 'dashboard', title: 'Visão geral', icon: LayoutDashboard },
   { id: 'collection', title: 'Minha coleção', icon: Trees },
@@ -111,7 +115,9 @@ function Login() {
 function PlantEditor({ plant, prefill, onClose, onSave }: { plant: PlantRow | null; prefill?: { name:string; scientificName:string }; onClose: () => void; onSave: (payload: PlantInput, id?: string) => Promise<void> }) {
   const [name, setName] = useState(plant?.name ?? prefill?.name ?? '');
   const [scientific, setScientific] = useState(plant?.scientific_name ?? prefill?.scientificName ?? '');
-  const [area, setArea] = useState<'Jardim' | 'Área protegida'>(plant?.area ?? 'Jardim');
+  const [area, setArea] = useState<PlantRow['area']>(plant?.area ?? 'Jardim');
+  const [age, setAge] = useState(plant?.estimated_age_years?.toString() ?? '');
+  const [light, setLight] = useState<PlantRow['light_preference']>(plant?.light_preference ?? 'Não confirmado');
   const [date, setDate] = useState(plant?.acquired_on ?? '');
   const [notes, setNotes] = useState(plant?.notes ?? '');
   const [saving, setSaving] = useState(false);
@@ -119,7 +125,7 @@ function PlantEditor({ plant, prefill, onClose, onSave }: { plant: PlantRow | nu
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
     setSaving(true); setError('');
-    try { await onSave({ name: name.trim(), scientific_name: scientific.trim() || null, area, acquired_on: date || null, notes: notes.trim() || null }, plant?.id); onClose(); }
+    try { await onSave({ name: name.trim(), scientific_name: scientific.trim() || null, area, acquired_on: date || null, notes: notes.trim() || null, estimated_age_years: age === '' ? null : Number(age), light_preference: light }, plant?.id); onClose(); }
     catch (err) { setError(formatError(err)); }
     finally { setSaving(false); }
   }
@@ -128,9 +134,11 @@ function PlantEditor({ plant, prefill, onClose, onSave }: { plant: PlantRow | nu
       <button className="modal-close" type="button" disabled={saving} onClick={onClose} aria-label="Fechar"><X size={20}/></button>
       <span className="eyebrow">MINHA COLEÇÃO</span><h2 id="editor-heading">{plant ? 'Editar exemplar' : 'Novo exemplar'}</h2><p>As informações serão compartilhadas com os usuários autorizados da coleção.</p>
       <form onSubmit={submit} className="plant-form">
-        <label>Nome do exemplar *<input required maxLength={100} value={name} onChange={e => setName(e.target.value)} placeholder="Ex.: Jabuticabeira 01"/></label>
+        <label>Nome do exemplar *<input required maxLength={100} value={name} onChange={e => setName(e.target.value)} placeholder="Ex.: Jabuticabeira #1"/></label>
         <label>Nome científico<input maxLength={160} value={scientific} onChange={e => setScientific(e.target.value)} placeholder="Ex.: Plinia sp."/></label>
-        <div className="form-two"><label>Ambiente<select value={area} onChange={e => setArea(e.target.value as PlantInput['area'])}><option>Jardim</option><option>Área protegida</option></select></label><label>Data de aquisição<input type="date" value={date} onChange={e => setDate(e.target.value)} /></label></div>
+        <div className="form-two"><label>Ambiente<select value={area} onChange={e => setArea(e.target.value as PlantInput['area'])}><option>Jardim</option><option>Área protegida</option><option>Apartamento</option></select></label><label>Data de aquisição<input type="date" value={date} onChange={e => setDate(e.target.value)} /></label></div>
+        <div className="form-two"><label>Idade estimada (anos)<input type="number" min="0" max="300" step="0.5" value={age} onChange={e=>setAge(e.target.value)} placeholder="Ex.: 5"/></label><label>Preferência de luminosidade<select value={light} onChange={e=>setLight(e.target.value as PlantRow['light_preference'])}><option>Não confirmado</option><option>Sol pleno</option><option>Meia-sombra</option><option>Sombra</option></select></label></div>
+        <div className="mori-environment-hint" role="status"><strong>Ambiente sugerido:</strong> {light === 'Sol pleno' ? 'Jardim descoberto, se o exemplar estiver aclimatado.' : light === 'Meia-sombra' ? 'Área protegida com sombrite adequado à espécie.' : light === 'Sombra' ? 'Área protegida, com sombra efetiva; o sombrite sozinho pode não bastar.' : 'Ainda não confirmado. Consulte a ficha técnica da espécie.'} <small>Sugestão de cultivo; não altera automaticamente o local cadastrado. Em apartamento, verifique a luz realmente disponível.</small></div>
         <label>Observações<textarea maxLength={5000} rows={4} value={notes} onChange={e => setNotes(e.target.value)} placeholder="Informações específicas do exemplar..."/></label>
         {error && <p className="live-message live-error" role="alert"><AlertCircle size={16}/>{error}</p>}
         <div className="live-actions"><button type="button" className="button button-outline" onClick={onClose} disabled={saving}>Cancelar</button><button className="button button-primary" disabled={saving || !name.trim()} type="submit">{saving ? <LoaderCircle className="spinning" size={17}/> : <CheckCircle2 size={17}/>} {saving ? 'Salvando...' : 'Salvar exemplar'}</button></div>
@@ -139,12 +147,12 @@ function PlantEditor({ plant, prefill, onClose, onSave }: { plant: PlantRow | nu
   </div>;
 }
 
-function PlantTile({ plant, coverUrl, onEdit, onDelete, onPhotos, onCare, onCalendar, onPlan }: { plant: PlantRow; coverUrl?: string; onEdit: () => void; onDelete: () => void; onPhotos: () => void; onCare: () => void; onCalendar: () => void; onPlan: () => void }) {
+function PlantTile({ plant, coverUrl, coverPosition, onEdit, onDelete, onPhotos, onCare, onCalendar, onPlan }: { plant: PlantRow; coverUrl?: string; coverPosition?: CoverPosition; onEdit: () => void; onDelete: () => void; onPhotos: () => void; onCare: () => void; onCalendar: () => void; onPlan: () => void }) {
   return <article className="live-plant-tile">
-    <div className="live-tile-art">{coverUrl ? <img className="live-cover-image" src={coverUrl} alt={`Foto de capa de ${plant.name}`} loading="lazy" decoding="async"/> : <span className="mori-cover-placeholder" aria-label="Exemplar sem foto de capa"><Trees size={52} strokeWidth={1.2}/><small>Sem foto de capa</small></span>}</div>
+    <div className="live-tile-art">{coverUrl ? <img className="live-cover-image" style={coverFrameStyle(coverPosition)} src={coverUrl} alt={`Foto de capa de ${plant.name}`} loading="lazy" decoding="async"/> : <span className="mori-cover-placeholder" aria-label="Exemplar sem foto de capa"><Trees size={52} strokeWidth={1.2}/><small>Sem foto de capa</small></span>}</div>
     <div className="live-tile-content"><small className="live-plant-code">MB-{plant.id.slice(0, 6).toUpperCase()}</small><h3>{plant.name}</h3><i>{plant.scientific_name || 'Identificação pendente'}</i>{plant.species_id && <div className="live-species-tag"><BookOpenText size={13}/> Ficha técnica vinculada</div>}<p><MapPin size={14}/>{plant.area}</p><p><CalendarDays size={14}/>Aquisição: {formatDate(plant.acquired_on)}</p>
-      {plant.notes && <div className="live-note">{plant.notes}</div>}
-      <div className="tile-actions"><button className="button photo-open" onClick={onPhotos}><Camera size={15}/> Fotos</button><button className="button button-outline care-tile-button" onClick={onCare}><History size={15}/> Manejos</button><button className="button button-outline" onClick={onCalendar}><CalendarDays size={15}/> Calendário</button><button className="button button-outline" onClick={onPlan}><CalendarClock size={15}/> Planejar</button><button className="button button-outline" onClick={onEdit}><Pencil size={15}/> Editar</button><button className="button live-danger" onClick={onDelete}><Trash2 size={15}/> Excluir</button></div>
+      {plant.estimated_age_years !== null && <p><CalendarDays size={14}/> Idade estimada: {plant.estimated_age_years.toLocaleString('pt-BR')} ano(s)</p>}{plant.light_preference !== 'Não confirmado' && <p><Flower2 size={14}/> Luz: {plant.light_preference} · {plant.light_preference === 'Sol pleno' ? 'Jardim sugerido' : 'Área protegida sugerida'}</p>}{plant.notes && <div className="live-note">{plant.notes}</div>}
+      <div className="tile-actions"><button className="button photo-open" onClick={onPhotos}><Camera size={15}/> Galeria</button><button className="button button-outline care-tile-button" onClick={onCare}><History size={15}/> Manejos</button><button className="button button-outline" onClick={onCalendar}><CalendarDays size={15}/> Calendário</button><button className="button button-outline" onClick={onPlan}><CalendarClock size={15}/> Planejar</button><button className="button button-outline" onClick={onEdit}><Pencil size={15}/> Editar</button><button className="button live-danger" onClick={onDelete}><Trash2 size={15}/> Excluir</button></div>
     </div>
   </article>;
 }
@@ -165,10 +173,11 @@ export default function LiveApp() {
   const [mobileMenu, setMobileMenu] = useState(false);
   const [query, setQuery] = useState('');
   const [areaFilter, setAreaFilter] = useState('Todos');
+  const [sortOrder, setSortOrder] = useState<'recent'|'oldest'|'az'|'za'>('recent');
   const [editor, setEditor] = useState<{plant: PlantRow | null; prefill?: {name:string;scientificName:string}} | null>(null);
   const [galleryPlant, setGalleryPlant] = useState<PlantRow | null>(null);
   const [coverRevision, setCoverRevision] = useState(0);
-  const { urls: coverUrls, loading: coversLoading, error: coverError } = usePlantCovers(collection?.id, page === 'collection' || page === 'dashboard', coverRevision);
+  const { urls: coverUrls, positions: coverPositions, loading: coversLoading, error: coverError } = usePlantCovers(collection?.id, page === 'collection' || page === 'dashboard', coverRevision);
   const [historyPlantId, setHistoryPlantId] = useState<string | null>(null);
   const [calendarPlantId, setCalendarPlantId] = useState<string | null>(null);
   const [plannerPlantId, setPlannerPlantId] = useState<string | null>(null);
@@ -194,7 +203,7 @@ export default function LiveApp() {
     if (!supabase) return;
     setFetching(true); setError('');
     const { data, error: fetchError } = await supabase.from('plants')
-      .select('id, collection_id, name, scientific_name, species_id, area, acquired_on, notes, created_at')
+      .select('id, collection_id, name, scientific_name, species_id, area, acquired_on, notes, estimated_age_years, light_preference, created_at')
       .eq('collection_id', collectionId).is('deleted_at', null)
       .order('created_at', { ascending: false }).limit(250);
     if (fetchError) setError(formatError(fetchError));
@@ -221,20 +230,28 @@ export default function LiveApp() {
   const visible = useMemo(() => plants.filter(p => {
     const text = `${p.name} ${p.scientific_name ?? ''} MB-${p.id.slice(0, 6)}`.toLocaleLowerCase('pt-BR');
     return text.includes(query.trim().toLocaleLowerCase('pt-BR')) && (areaFilter === 'Todos' || p.area === areaFilter);
-  }), [plants, query, areaFilter]);
+  }).sort((a,b) => {
+    if (sortOrder === 'az' || sortOrder === 'za') {const cmp=a.name.localeCompare(b.name,'pt-BR',{sensitivity:'base',numeric:true});return sortOrder === 'az' ? cmp : -cmp;}
+    // Sem data de aquisição: sempre no fim, independentemente da ordem selecionada.
+    if (!a.acquired_on) return b.acquired_on ? 1 : 0;
+    if (!b.acquired_on) return -1;
+    const cmp=a.acquired_on.localeCompare(b.acquired_on);
+    return (sortOrder === 'recent' ? -cmp : cmp) || a.name.localeCompare(b.name,'pt-BR');
+  }), [plants, query, areaFilter, sortOrder]);
 
   async function savePlant(payload: PlantInput, id?: string) {
     if (!supabase || !collection || !user) throw new Error('A coleção não está disponível.');
     if (!payload.name || payload.name.length > 100) throw new Error('Digite um nome válido para o exemplar.');
+    if (payload.estimated_age_years !== null && (!Number.isFinite(payload.estimated_age_years) || payload.estimated_age_years < 0 || payload.estimated_age_years > 300)) throw new Error('Informe uma idade estimada entre 0 e 300 anos.');
     if (id) {
       const { data, error: updateError } = await supabase.from('plants').update(payload).eq('id', id).eq('collection_id', collection.id)
-        .select('id, collection_id, name, scientific_name, species_id, area, acquired_on, notes, created_at').single();
+        .select('id, collection_id, name, scientific_name, species_id, area, acquired_on, notes, estimated_age_years, light_preference, created_at').single();
       if (updateError) throw updateError;
       setPlants(old => old.map(p => p.id === id ? (data as PlantRow) : p));
       setNotice('Exemplar atualizado com sucesso.');
     } else {
       const { data, error: insertError } = await supabase.from('plants').insert({ ...payload, collection_id: collection.id })
-        .select('id, collection_id, name, scientific_name, species_id, area, acquired_on, notes, created_at').single();
+        .select('id, collection_id, name, scientific_name, species_id, area, acquired_on, notes, estimated_age_years, light_preference, created_at').single();
       if (insertError) throw insertError;
       setPlants(old => [data as PlantRow, ...old]);
       setNotice('Exemplar cadastrado e salvo no Supabase.');
@@ -281,12 +298,12 @@ export default function LiveApp() {
         {error && <div className="live-message live-error" role="alert"><AlertCircle size={18}/><span>{error}</span><button className="message-close" aria-label="Fechar erro" onClick={()=>setError('')}><X size={15}/></button></div>}
         {notice && <div className="live-message live-success" role="status"><CheckCircle2 size={18}/><span>{notice}</span><button className="message-close" aria-label="Fechar aviso" onClick={()=>setNotice('')}><X size={15}/></button></div>}
         {!collection && !fetching ? <div className="live-empty live-no-collection"><ShieldCheck size={38}/><h2>Nenhuma coleção autorizada encontrada</h2><p>Seu login existe, mas ainda precisa ser associado à coleção pelo SQL de inicialização. Confira o arquivo README.md e execute o passo de autorização no SQL Editor do Supabase.</p><button onClick={() => void logOut()} className="button button-outline">Sair</button></div> :
-        page === 'dashboard' ? (collection ? <MoriDashboard collectionId={collection.id} plants={plants} covers={coverUrls} onCollection={()=>goTo('collection')} onHistory={()=>goTo('history')} onPlanner={()=>goTo('planner')} onWishlist={()=>goTo('wishlist')}/> : <EmptyPanel title="Carregando coleção" body="Estamos buscando os exemplares da coleção."/>) :
+        page === 'dashboard' ? (collection ? <MoriDashboard collectionId={collection.id} plants={plants} covers={coverUrls} coverPositions={coverPositions} onCollection={()=>goTo('collection')} onHistory={()=>goTo('history')} onPlanner={()=>goTo('planner')} onWishlist={()=>goTo('wishlist')}/> : <EmptyPanel title="Carregando coleção" body="Estamos buscando os exemplares da coleção."/>) :
                 page === 'collection' ? <div className="page-enter mori-collection-page"><div className="page-heading mori-interior-heading mori-collection-heading"><div><span className="eyebrow">AS ÁRVORES QUE CUIDAMOS</span><h1>Minha coleção</h1><p>Fotos, história e cuidados de cada exemplar da nossa pequena floresta.</p></div><button className="button button-primary" onClick={()=>setEditor({plant:null})}><Plus size={17}/> Novo exemplar</button></div>
-          <div className="toolbar"><label className="search-input"><Search size={18}/><input placeholder="Buscar nome ou espécie..." aria-label="Buscar exemplares" value={query} onChange={e=>setQuery(e.target.value)}/></label><label className="filter-select"><MapPin size={17}/><select aria-label="Filtrar por ambiente" value={areaFilter} onChange={e=>setAreaFilter(e.target.value)}><option>Todos</option><option>Jardim</option><option>Área protegida</option></select></label><button className="button button-outline" disabled={fetching} onClick={()=>collection && void reload(collection.id)} aria-label="Atualizar lista"><RefreshCcw size={17} className={fetching ? 'spinning' : ''}/></button></div>
+          <div className="toolbar"><label className="search-input"><Search size={18}/><input placeholder="Buscar nome ou espécie..." aria-label="Buscar exemplares" value={query} onChange={e=>setQuery(e.target.value)}/></label><label className="filter-select"><MapPin size={17}/><select aria-label="Filtrar por ambiente" value={areaFilter} onChange={e=>setAreaFilter(e.target.value)}><option>Todos</option><option>Jardim</option><option>Área protegida</option><option>Apartamento</option></select></label><label className="filter-select"><CalendarDays size={17}/><select aria-label="Ordenar exemplares" value={sortOrder} onChange={e=>setSortOrder(e.target.value as typeof sortOrder)}><option value="recent">Aquisição: mais recentes</option><option value="oldest">Aquisição: mais antigas</option><option value="az">Nome: A–Z</option><option value="za">Nome: Z–A</option></select></label><button className="button button-outline" disabled={fetching} onClick={()=>collection && void reload(collection.id)} aria-label="Atualizar lista"><RefreshCcw size={17} className={fetching ? 'spinning' : ''}/></button></div>
           <p className="result-count">Exibindo {visible.length} de {plants.length} exemplares {fetching ? '· atualizando...' : coversLoading ? '· carregando capas...' : ''}</p>
           {coverError && <p className="live-message live-error" role="alert"><AlertCircle size={16}/><span>As fotos de capa não puderam ser carregadas: {coverError}. Confira a migração 08 no Supabase.</span></p>}
-          {visible.length ? <div className="live-collection-grid">{visible.map(p => <PlantTile key={p.id} plant={p} coverUrl={coverUrls[p.id]} onEdit={()=>setEditor({plant:p})} onDelete={()=>void removePlant(p)} onPhotos={()=>setGalleryPlant(p)} onCare={()=>{setHistoryPlantId(p.id); setPage('history'); setNotice(''); window.scrollTo({top:0, behavior:'smooth'});}} onCalendar={()=>{setCalendarPlantId(p.id); setPage('calendar'); setNotice(''); window.scrollTo({top:0, behavior:'smooth'});}} onPlan={()=>{setPlannerPlantId(p.id); setPage('planner'); setNotice(''); window.scrollTo({top:0, behavior:'smooth'});}}/>)}</div> : <EmptyPanel title={plants.length?'Nenhum exemplar corresponde à pesquisa':'Nenhum exemplar cadastrado'} body={plants.length?'Tente outra busca ou remova os filtros.':'Clique em “Novo exemplar” para salvar o primeiro bonsai no banco de dados.'}/>}
+          {visible.length ? <div className="live-collection-grid">{visible.map(p => <PlantTile key={p.id} plant={p} coverUrl={coverUrls[p.id]} coverPosition={coverPositions[p.id]} onEdit={()=>setEditor({plant:p})} onDelete={()=>void removePlant(p)} onPhotos={()=>setGalleryPlant(p)} onCare={()=>{setHistoryPlantId(p.id); setPage('history'); setNotice(''); window.scrollTo({top:0, behavior:'smooth'});}} onCalendar={()=>{setCalendarPlantId(p.id); setPage('calendar'); setNotice(''); window.scrollTo({top:0, behavior:'smooth'});}} onPlan={()=>{setPlannerPlantId(p.id); setPage('planner'); setNotice(''); window.scrollTo({top:0, behavior:'smooth'});}}/>)}</div> : <EmptyPanel title={plants.length?'Nenhum exemplar corresponde à pesquisa':'Nenhum exemplar cadastrado'} body={plants.length?'Tente outra busca ou remova os filtros.':'Clique em “Novo exemplar” para salvar o primeiro bonsai no banco de dados.'}/>}
         </div> :
         page === 'library' ? (collection ? <Suspense fallback={<ModuleLoading/>}><SpeciesLibrary collectionId={collection.id} plants={plants} onLinked={async()=>{await reload(collection.id);}} /></Suspense> : <EmptyPanel title="Carregando coleção" body="Aguarde a verificação de acesso antes de abrir a biblioteca."/>) :
         page === 'history' ? (collection ? <Suspense fallback={<ModuleLoading/>}><CareHistory key={historyPlantId ?? 'all'} collectionId={collection.id} plants={plants} initialPlantId={historyPlantId ?? ''}/></Suspense> : <EmptyPanel title="Carregando coleção" body="Aguarde a verificação do acesso à coleção."/>) :
@@ -296,7 +313,7 @@ export default function LiveApp() {
                 page === 'trash' ? (collection ? <Suspense fallback={<ModuleLoading/>}><RecycleBin collectionId={collection.id} onRestoredPlant={async()=>{await reload(collection.id); setCoverRevision(n=>n+1);}} /></Suspense> : <EmptyPanel title="Carregando coleção" body="Aguarde a verificação do acesso à coleção."/>) :
         (collection ? <Suspense fallback={<ModuleLoading/>}><BackupCenter collectionId={collection.id} collectionName={collection.name} email={user.email}/></Suspense> : <EmptyPanel title="Carregando coleção" body="Aguarde a conexão para exportar seus dados." />)}
 
-        <footer className="footer mori-footer"><span><Heart size={15}/> Feito com carinho por Duda & Gui ♡</span><span>Mori Bonsai · Nossa pequena floresta · v1.3</span></footer>
+        <footer className="footer mori-footer"><span><Heart size={15}/> Feito com carinho por Duda & Gui ♡</span><span>Mori Bonsai · Nossa pequena floresta · v1.4</span></footer>
       </main></div>
     {editor && <PlantEditor key={editor.plant?.id ?? editor.prefill?.name ?? 'new'} plant={editor.plant} prefill={editor.prefill} onClose={()=>setEditor(null)} onSave={savePlant}/>}
     {galleryPlant && <Suspense fallback={<div className="modal-backdrop"><ModuleLoading/></div>}><PhotoGallery key={galleryPlant.id} plant={galleryPlant} onClose={()=>setGalleryPlant(null)} onChanged={()=>setCoverRevision(n=>n+1)}/></Suspense>}

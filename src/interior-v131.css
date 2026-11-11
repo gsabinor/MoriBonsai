@@ -278,3 +278,39 @@
 @media(prefers-reduced-motion:reduce){
   .calendar-page .calendar-month {transition:none;}
 }
+
+/* v1.4.1 — Referência visual independente do registro de evolução */
+.mori-photo-modal .mori-reference-section{
+  background:linear-gradient(145deg,#faf7ed 0%,#f1f3e9 100%);
+  border:1px solid #dfd8c5;border-radius:16px;padding:21px;margin:24px 0 23px;
+}
+.mori-reference-header{margin-bottom:17px;}
+.mori-reference-tag{display:inline-flex;align-items:center;gap:7px;color:#9b7a43;font-size:10px;font-weight:800;letter-spacing:1.2px;}
+.mori-reference-header h3,.mori-gallery-timeline-heading h3{
+  font-family:Georgia,serif;color:#294834;font-weight:400;font-size:clamp(20px,3vw,25px);margin:8px 0 6px;
+}
+.mori-reference-header p,.mori-gallery-timeline-heading p{
+  font-size:12px;line-height:1.6;color:#657968;margin:0;max-width:640px;
+}
+.mori-reference-content{display:grid;grid-template-columns:minmax(200px,42%) minmax(0,1fr);gap:18px;align-items:start;}
+.mori-reference-image{display:block;min-height:185px;border-radius:12px;overflow:hidden;background:#e7e4d8;border:1px solid #e5ddc9;}
+.mori-reference-image img{width:100%;height:235px;object-fit:contain;display:block;}
+.mori-reference-details{display:grid;align-content:start;gap:12px;min-width:0;}
+.mori-reference-details strong{font:normal 19px Georgia,serif;color:#31523b;}
+.mori-reference-details p{font-size:12px;line-height:1.6;color:#586c5b;margin:0;overflow-wrap:anywhere;}
+.mori-reference-details .mori-reference-credit{font-size:11px;color:#687969;}
+.mori-reference-actions{display:flex;flex-wrap:wrap;gap:9px;}
+.mori-reference-actions .button,.mori-reference-add>.button{font-size:12px;gap:7px;}
+.mori-reference-empty{padding:12px 13px;margin-bottom:13px;background:#ffffff95;border:1px dashed #cbd4c6;border-radius:10px;color:#5a745f;font-size:12px;line-height:1.6;}
+.mori-reference-fields{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px;}
+.mori-reference-fields label{min-width:0;display:grid;gap:6px;color:#506f5a;font-size:12px;font-weight:700;}
+.mori-reference-fields :is(input,textarea){min-width:0;width:100%;padding:10px 12px;border:1px solid #dcd7c8;border-radius:8px;background:#fffdf8;color:#284936;font:inherit;font-size:13px;resize:vertical;}
+.mori-reference-add .photo-help{margin:11px 0 0;}
+.mori-reference-edit{border-radius:10px;border:1px solid #e5decc;}
+.mori-gallery-timeline-heading{padding-bottom:8px;border-bottom:1px solid #e4e0d3;margin:26px 0 14px;}
+@media(max-width:680px){
+  .mori-photo-modal .mori-reference-section{padding:15px;}
+  .mori-reference-content,.mori-reference-fields{grid-template-columns:1fr;}
+  .mori-reference-image img{height:260px;}
+  .mori-reference-actions .button{flex:1;justify-content:center;}
+}

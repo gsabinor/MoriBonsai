@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 import { ArrowRight, CalendarClock, CheckCheck, ChevronRight, Heart, History, Leaf, Sprout, Trees, PlusCircle } from 'lucide-react';
 import { supabase } from '../lib/supabase';
+import { coverFrameStyle } from '../lib/coverFrame';
 import WeatherBH from './WeatherBH';
+import type { CoverPosition } from './usePlantCovers';
 
 type Plant = { id: string; name: string; scientific_name: string | null; area: string; acquired_on: string | null };
 type Log = { id: string; category: string; occurred_on: string };
@@ -49,10 +51,11 @@ function CareChart({ logs, loading, truncated }: { logs: Log[]; loading: boolean
   </section>;
 }
 
-export default function MoriDashboard({ collectionId, plants, covers, onCollection, onHistory, onPlanner, onWishlist }:{
+export default function MoriDashboard({ collectionId, plants, covers, coverPositions, onCollection, onHistory, onPlanner, onWishlist }:{
   collectionId: string;
   plants: Plant[];
   covers: Record<string,string>;
+  coverPositions: Record<string,CoverPosition>;
   onCollection: ()=>void;
   onHistory: ()=>void;
   onPlanner: ()=>void;
@@ -123,7 +126,7 @@ export default function MoriDashboard({ collectionId, plants, covers, onCollecti
       </section>
     </div>
     <div className="mori-panels-row lower-row"><section className="mori-panel mori-featured"><div className="mori-panel-head"><div><span className="mori-panel-kicker">NOSSO JARDIM</span><h2><Trees size={20}/> Em destaque na coleção</h2></div><button className="mori-panel-link" onClick={onCollection}>Abrir coleção <ArrowRight size={15}/></button></div>
-      {recent.length ? <div className="mori-featured-grid">{recent.map(p=><button className="mori-feature" key={p.id} onClick={onCollection}><div className="mori-feature-photo">{covers[p.id]?<img src={covers[p.id]} alt={`Bonsai ${p.name}`} loading="lazy"/>:<Sprout size={52}/>}</div><div className="mori-feature-copy"><b>{p.name}</b><i>{p.scientific_name??'Identificação pendente'}</i><small>{p.area}</small><span>Ver na coleção <ChevronRight size={14}/></span></div></button>)}</div> : <div className="mori-soft-empty">Ainda não há bonsais cadastrados.<br/><button onClick={onCollection}>Adicionar primeiro exemplar <PlusCircle size={14}/></button></div>}
+      {recent.length ? <div className="mori-featured-grid">{recent.map(p=><button className="mori-feature" key={p.id} onClick={onCollection}><div className="mori-feature-photo">{covers[p.id]?<img src={covers[p.id]} alt={`Bonsai ${p.name}`} loading="lazy" style={coverFrameStyle(coverPositions[p.id])}/>:<Sprout size={52}/>}</div><div className="mori-feature-copy"><b>{p.name}</b><i>{p.scientific_name??'Identificação pendente'}</i><small>{p.area}</small><span>Ver na coleção <ChevronRight size={14}/></span></div></button>)}</div> : <div className="mori-soft-empty">Ainda não há bonsais cadastrados.<br/><button onClick={onCollection}>Adicionar primeiro exemplar <PlusCircle size={14}/></button></div>}
       </section>
       <section className="mori-panel mori-wishlist"><div className="mori-panel-head"><div><span className="mori-panel-kicker">IDEIAS PARA O FUTURO</span><h2><Heart size={20}/> Planos & desejos</h2></div><button className="mori-panel-link" onClick={onWishlist}>Conhecer <ArrowRight size={15}/></button></div>
         <p className="mori-wishlist-note">Três listas para guardar nossas espécies desejadas, compras de substratos e links de ferramentas.</p>
