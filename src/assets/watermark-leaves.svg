@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 135" fill="none" aria-hidden="true">
+  <!-- Ramo botânico compacto, inteiramente contido no canto direito do card. -->
+  <g stroke="#859978" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M188 132C170 114 151 98 136 79c-12-15-18-32-22-49" stroke-width="3.2"/>
+    <path d="M162 108c-18 3-32-2-45-12M149 93c5-18 17-31 30-36M130 72c-15 2-30-4-38-14M120 47c5-14 15-21 27-26" stroke-width="2"/>
+  </g>
+  <g stroke="#94A684" stroke-width="1.4" fill="#A6B998">
+    <path d="M113 94C100 75 79 79 75 88c10 16 26 18 38 6Z" opacity=".68"/>
+    <path d="M177 58c-4-19 8-31 24-34 5 18-4 30-24 34Z" opacity=".72"/>
+    <path d="M92 57C78 41 59 43 56 52c8 16 23 21 36 5Z" opacity=".64"/>
+    <path d="M145 21c-2-20 7-29 21-31 7 17 0 28-21 31Z" opacity=".65"/>
+    <path d="M113 29c-15-10-18-26-10-35 16 5 22 18 10 35Z" opacity=".56"/>
+    <path d="M120 97c-9 13-7 28 1 32 13-9 13-23-1-32Z" opacity=".5"/>
+  </g>
+  <g stroke="#D8DEC6" stroke-width="1" opacity=".55" stroke-linecap="round">
+    <path d="m79 89 24 5m-43-42 25 6m105-29-12 22m-20-55-11 22"/>
+  </g>
+</svg>

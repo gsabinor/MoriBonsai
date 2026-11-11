@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 200" preserveAspectRatio="xMidYMax slice" fill="none" aria-hidden="true">
+  <!-- Paisagem baixa: montanhas ao pé do card e pinheiros discretos no extremo direito. -->
+  <defs>
+    <linearGradient id="far" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#CEDABE"/><stop offset="1" stop-color="#B4CAAD"/>
+    </linearGradient>
+    <linearGradient id="near" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="#A6C1A1"/><stop offset="1" stop-color="#719A7B"/>
+    </linearGradient>
+  </defs>
+  <path d="M0 188 75 169l48 9 92-56 76 50 71-39 88 45 82-45 70 40 80-52 118 58v21H0Z" fill="url(#far)" opacity=".65"/>
+  <path d="M0 196 105 180l84 9 89-27 72 27 100-25 87 17 92-29 171 38v10H0Z" fill="url(#near)" opacity=".57"/>
+  <path d="M0 199 130 192l112 3 88-13 110 9 96-18 90 14 86-12 88 19v6H0Z" fill="#7C9D7E" opacity=".35"/>
+  <g fill="#5C876A" opacity=".42">
+    <path d="m713 190 13-40-9 7 10-26 11 27-10-7 12 39ZM752 190l10-32-7 6 8-24 11 25-8-7 11 32ZM781 190l10-28-7 6 8-22 10 23-8-7 10 28Z"/>
+  </g>
+  <path d="M0 199H800" stroke="#72977B" stroke-width="1.5" opacity=".30"/>
+</svg>

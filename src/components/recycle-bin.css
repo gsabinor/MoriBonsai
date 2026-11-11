@@ -1,0 +1,26 @@
+.trash-view {max-width:1100px;}
+.trash-explainer{display:flex;align-items:flex-start;gap:13px;background:#f3f7ef;border:1px solid #dbe8d6;border-radius:15px;padding:16px 18px;color:#355d44;margin:20px 0 22px;}
+.trash-explainer svg{flex-shrink:0;margin-top:2px;}
+.trash-explainer p{margin:0;font-size:14px;line-height:1.6;}
+.trash-tabs{display:flex;flex-wrap:wrap;gap:9px;margin:0 0 16px;}
+.trash-tab{display:flex;align-items:center;gap:8px;padding:10px 16px;border-radius:12px;border:1px solid #d5dfd6;background:white;color:#3d5c4b;font:inherit;font-size:14px;font-weight:700;cursor:pointer;}
+.trash-tab-active{background:#204b3b;color:white;border-color:#204b3b;}
+.trash-card{padding:0!important;overflow:hidden;}
+.trash-card-header{padding:19px 22px;display:flex;gap:12px;justify-content:space-between;align-items:center;border-bottom:1px solid #e3eae5;}
+.trash-card-header strong{color:#234835;}
+.trash-card-header small{color:#75877b;}
+.trash-status{min-height:180px;padding:30px;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:10px;color:#648270;text-align:center;}
+.trash-status b{color:#2b5940;}
+.trash-status span{font-size:13px;}
+.trash-record{display:flex;align-items:center;justify-content:space-between;gap:16px;padding:18px 22px;border-bottom:1px solid #edf0ec;}
+.trash-record:last-child{border-bottom:0;}
+.trash-record-info{min-width:0;display:flex;flex-direction:column;gap:5px;color:#748577;font-size:13px;overflow-wrap:anywhere;}
+.trash-record-name{font-size:15px;font-weight:700;color:#234835;}
+.trash-restore{white-space:nowrap;flex-shrink:0;}
+.trash-more{text-align:center;padding:16px;border-top:1px solid #edf0ec;}
+.trash-footnote{font-size:13px;color:#6c7f72;margin-top:18px;line-height:1.65;}
+@media(max-width:600px){.trash-record{align-items:flex-start;flex-direction:column;}.trash-restore{width:100%;justify-content:center;}.trash-card-header{align-items:flex-start;flex-direction:column;}.trash-tab{flex:1;justify-content:center;}}
+
+.trash-origin-tag{display:inline-flex;width:max-content;border-radius:99px;background:#e4eee4;color:#275d42;padding:3px 9px;font-size:11px;font-weight:750;}
+.trash-explanation{color:#536c5b;line-height:1.4;max-width:56ch;}
+.trash-restore:disabled{opacity:.55;cursor:not-allowed;}

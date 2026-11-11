@@ -1,0 +1,280 @@
+/* Mori Bonsai v1.3.1 — acabamento da agenda, calendário e álbum.
+   Camada visual isolada. Não altera consultas, permissões nem operações.
+   A identidade do dashboard v1.1.2 e das outras telas permanece intocada. */
+
+/* ── Calendário consultivo / caderno de cultivo ──────────────────────── */
+.mori-calendar-heading { min-height:169px; }
+.mori-calendar-heading::before {
+  background-image:url('./assets/watermark-leaves.svg');
+  background-size:auto 270px;
+  background-position:right 16px center;
+  opacity:.16;
+}
+.mori-calendar-heading .button-outline,
+.mori-planner-heading .button-primary {
+  background:#f5eacd;
+  border:1px solid #e6d7ae;
+  color:#204530;
+  flex-shrink:0;
+}
+.mori-calendar-heading .button-outline:hover,
+.mori-planner-heading .button-primary:hover {
+  background:#fff8e7;
+  color:#173b29;
+}
+.calendar-page .calendar-safety {
+  border:1px solid #e2dac7;
+  border-left:4px solid #99a47e;
+  background:linear-gradient(115deg,#faf6eb,#f2f2e5);
+  color:#667361;
+  padding:15px 19px;
+  border-radius:12px;
+  margin-bottom:17px;
+}
+.calendar-page .calendar-safety svg {color:#557452;}
+.calendar-page .calendar-safety b {color:#284d36;}
+.calendar-page .calendar-toolbar {
+  padding:16px 18px;
+  background:#fffaf0;
+  border:1px solid #e6dcc8;
+  border-radius:15px;
+  box-shadow:0 5px 17px #5e4c2c09;
+}
+.calendar-page .calendar-mode {background:#eeeede;border-color:#e3e2ce;}
+.calendar-page .calendar-mode button {color:#506e55;}
+.calendar-page .calendar-mode button.is-selected {background:#224d37;color:#fdf2d6;box-shadow:0 4px 10px #1b443523;}
+.calendar-page .calendar-select {font-size:12px;color:#59705b;}
+.calendar-page .calendar-select select {font-size:13px;background:#fffdf7;border-color:#ded8c9;min-height:45px;}
+.calendar-page .calendar-guide-summary,
+.calendar-page .calendar-month-section,
+.calendar-page .calendar-detail {
+  background:#fffcf5;
+  border:1px solid #e7dac2;
+  border-radius:17px;
+  box-shadow:0 7px 21px #5744230a;
+}
+.calendar-page .calendar-guide-summary {position:relative;isolation:isolate;overflow:hidden;}
+.calendar-page .calendar-guide-summary::after {
+  content:"";position:absolute;inset:0 0 auto auto;width:165px;height:144px;
+  background:url('./assets/watermark-bonsai.svg') right -21px top -47px / 158px auto no-repeat;
+  opacity:.09;z-index:-1;pointer-events:none;
+}
+.calendar-page .calendar-guide-top h2 {
+  font-family:Georgia,serif;font-size:clamp(25px,2.5vw,34px);font-weight:400;
+  color:#21422f;letter-spacing:-.6px;
+}
+.calendar-page .calendar-guide-top em {font-family:Georgia,serif;font-size:15px;color:#65745a;}
+.calendar-page .calendar-guide-metadata {padding:8px 10px;border:1px solid #dce4cf;border-radius:10px;background:#f2f5e9;color:#4d7654;}
+.calendar-page .calendar-summary-stats {gap:12px;margin-top:19px;}
+.calendar-page .calendar-summary-stats>div {
+  padding:17px 19px;border-radius:12px;border:1px solid #e4e6d7;
+  background:linear-gradient(135deg,#f7f7ea,#f0f3e4);
+}
+.calendar-page .calendar-summary-stats span{font-size:12px;color:#61775e;}
+.calendar-page .calendar-summary-stats strong{font-family:Georgia,serif;font-weight:400;font-size:32px;color:#254c35;}
+.calendar-page .calendar-summary-stats small{font-family:'DM Sans',system-ui,sans-serif;color:#85967c;}
+.calendar-page .calendar-section-heading h2,
+.calendar-page .calendar-detail-heading h2 {
+  font-family:Georgia,serif;font-size:25px;font-weight:400;color:#234330;
+}
+.calendar-page .calendar-month-grid{gap:10px;}
+.calendar-page .calendar-month{
+  background:linear-gradient(145deg,#fffdf7,#f7f5e9);
+  border:1px solid #e8ddca;
+  border-radius:12px;padding:15px;min-height:107px;
+  transition:background-color .16s,border-color .16s,box-shadow .16s,transform .16s;
+}
+.calendar-page .calendar-month strong{font-family:Georgia,serif;font-weight:500;font-size:16px;color:#2d5038;}
+.calendar-page .calendar-month-number{color:#9b917b;font-size:10px;}
+.calendar-page .calendar-mini-status{font-size:10px;color:#887f70;}
+.calendar-page .calendar-mini-ready{color:#42754d;}
+@media(hover:hover) {
+  .calendar-page .calendar-month:hover{transform:translateY(-2px);background:#f3f4e8;border-color:#abbc99;box-shadow:0 6px 16px #394a2a0e;}
+}
+.calendar-page .calendar-month.calendar-month-active{
+  background:linear-gradient(145deg,#244d37,#376248);
+  border:1px solid #234834;padding:15px;
+  box-shadow:0 7px 15px #21442b20;
+}
+.calendar-page .calendar-month-active strong,
+.calendar-page .calendar-month-active .calendar-month-number,
+.calendar-page .calendar-month-active .calendar-mini-status {color:#f6eed5;}
+.calendar-page .calendar-detail-heading{padding-bottom:15px;}
+.calendar-page .calendar-evidence {font-size:11px;border-radius:20px;}
+.calendar-page .calendar-detail-section {padding:20px 0 8px;}
+.calendar-page .calendar-detail-section h3 {font-size:14px;color:#284f37;margin-bottom:12px;}
+.calendar-page .calendar-detail-section p {font-size:13px;color:#536b55;line-height:1.76;}
+.calendar-page .calendar-detail-section+.calendar-detail-section {border-color:#e9e2d6;}
+.calendar-page .calendar-not-confirmed {border:1px solid #ede0c8;background:#faf4e5;}
+.calendar-page .calendar-footer-notice {font-size:12px;color:#7b8877;}
+.calendar-page .calendar-empty {background:linear-gradient(145deg,#fffcf5,#f1f2e5);border-color:#e9dfc8;}
+
+/* ── Planejamento / agenda pessoal ────────────────────────────────────── */
+.mori-planner-page .mori-planner-heading {min-height:171px;}
+.mori-planner-page .mori-planner-heading::before {
+  background-image:url('./assets/watermark-mountains.svg');
+  background-size:contain;background-position:right bottom;
+  width:min(63%,600px);opacity:.29;
+}
+.mori-planner-page .planner-advice {
+  border:1px solid #e5dbc6;border-left:4px solid #b4a575;
+  background:linear-gradient(105deg,#f8f5e8,#f1f2e6);
+  color:#5b725b;border-radius:12px;font-size:13px;line-height:1.65;
+}
+.mori-planner-page .planner-filters {
+  padding:18px;background:#fffbf3;border:1px solid #e5dac6;
+  border-radius:15px;box-shadow:0 5px 15px #5a4d310a;
+}
+.mori-planner-page .planner-filter{font-size:12px;color:#536b57;}
+.mori-planner-page .planner-filter select {
+  min-height:42px;font-size:13px;background:#fffdf8;border-color:#e1d7c6;
+}
+.mori-planner-page .planner-search{height:42px;background:#fffdf8;border-color:#e1d7c6;}
+.mori-planner-page .planner-search input{font-size:13px;}
+.mori-planner-page .planner-refresh {height:42px;}
+.mori-planner-page .planner-summary {
+  border-left:3px solid #a1b38b;padding:4px 0 4px 12px;
+  font-size:12px;color:#526a54;margin:20px 0 23px;
+}
+.mori-planner-page .planner-list{position:relative;padding-left:25px;gap:16px;}
+.mori-planner-page .planner-list::before{
+  content:"";position:absolute;left:8px;top:26px;bottom:26px;
+  width:2px;border-radius:10px;background:linear-gradient(#a6b695,#dfe4d3);
+}
+.mori-planner-page .planner-item{
+  position:relative;grid-template-columns:minmax(130px,170px) minmax(0,1fr);gap:14px 22px;
+  background:#fffcf5;border:1px solid #e7dcc8;border-radius:16px;
+  padding:20px 22px;box-shadow:0 6px 20px #5b4a2b0b;
+}
+.mori-planner-page .planner-item::before{
+  content:"";position:absolute;left:-24px;top:33px;width:12px;height:12px;
+  box-sizing:border-box;border:3px solid #f5f0e6;border-radius:50%;
+  background:#4b7954;box-shadow:0 0 0 2px #8ea88a;
+}
+.mori-planner-page .planner-date {
+  border-right:1px solid #e6dece;
+  color:#78826b;font-size:12px;padding:9px 17px 9px 0;
+}
+.mori-planner-page .planner-date svg{color:#8c945f;}
+.mori-planner-page .planner-date strong {font-family:Georgia,serif;font-size:19px;font-weight:400;color:#284e36;}
+.mori-planner-page .planner-state {border-radius:999px;padding:6px 11px;font-size:10px;}
+.mori-planner-page .planner-category {font-size:11px;color:#7e846b;}
+.mori-planner-page .planner-main h3{
+  font-family:Georgia,serif;font-size:22px;font-weight:400;line-height:1.24;color:#224430;
+}
+.mori-planner-page .planner-plant{font-size:12px;color:#657860;}
+.mori-planner-page .planner-notes{font-size:13px;line-height:1.72;color:#556958;}
+.mori-planner-page .planner-actions {
+  border-top:1px solid #eee5d8;grid-column:2;
+  display:flex;align-items:center;gap:8px;padding-top:13px;
+}
+.mori-planner-page .planner-actions .button{font-size:12px;padding:9px 12px;}
+.mori-planner-page .planner-empty{
+  background:linear-gradient(125deg,#fffcf5,#f4f3e7);border-color:#e6dac6;
+}
+.mori-planner-page .planner-modal {background:#fffaf1;border:1px solid #e8ddc8;}
+.mori-planner-page .planner-modal h2 {font-family:Georgia,serif;font-weight:400;}
+
+/* ── Álbum de fotografias / registro visual ──────────────────────────── */
+.mori-photo-modal{background:#fffcf5;border:1px solid #e3dac9;box-shadow:0 30px 85px #0a1e143f;}
+.mori-photo-modal .modal-close{
+  z-index:3;top:13px;right:13px;color:#f4e6c6;background:#ffffff22;
+  border-radius:50%;padding:5px;width:34px;height:34px;
+}
+.mori-photo-modal .modal-close:hover{background:#ffffff44;}
+.mori-photo-heading{
+  position:relative;isolation:isolate;overflow:hidden;
+  margin:-31px -31px 25px;padding:30px 58px 26px 31px;
+  background:linear-gradient(118deg,#123529,#214a35 70%,#3e6147);
+  color:#f6edd3;min-height:176px;
+}
+.mori-photo-heading::after{
+  content:"";position:absolute;right:0;top:-70px;bottom:-55px;width:200px;
+  background:url('./assets/watermark-bonsai.svg') center right / auto 230px no-repeat;
+  opacity:.19;z-index:-1;pointer-events:none;
+}
+.mori-photo-heading .eyebrow{color:#dfc990;font-size:10px;letter-spacing:1.6px;}
+.mori-photo-modal .mori-photo-heading h2{
+  color:#f7edce;font-size:clamp(26px,3.4vw,34px);
+  font-weight:400;font-family:Georgia,serif;letter-spacing:-.4px;margin:9px 0 8px;
+}
+.mori-photo-heading p{font-size:13px;color:#e6e4d1;margin:0 0 15px;line-height:1.5;}
+.mori-photo-private{
+  display:inline-flex;align-items:center;gap:7px;
+  font-size:11px;color:#e6d6b6;border:1px solid #e9d8af49;
+  padding:6px 10px;border-radius:999px;background:#f5e9c011;
+}
+.mori-photo-modal .photo-upload-panel{
+  background:linear-gradient(125deg,#f7f6ea,#f1f3e7);
+  border:1px solid #e4dfcd;border-radius:15px;padding:18px;
+}
+.mori-photo-upload-heading{
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px 14px;
+  border-bottom:1px solid #e2dfce;padding-bottom:12px;margin-bottom:15px;
+}
+.mori-photo-upload-heading span{display:flex;align-items:center;gap:9px;font-family:Georgia,serif;font-size:19px;color:#284d35;}
+.mori-photo-upload-heading span svg{color:#5d7d58;}
+.mori-photo-upload-heading small{font-size:11px;color:#7e8974;}
+.mori-photo-modal .photo-upload-fields label,
+.mori-photo-modal .photo-inline-edit label{color:#566f59;font-size:12px;}
+.mori-photo-modal .photo-upload-fields input,
+.mori-photo-modal .photo-inline-edit :is(input,textarea),
+.mori-photo-modal .photo-list-controls select{
+  background:#fffdf8;border-color:#ddd7c6;font-size:13px;min-height:42px;
+}
+.mori-photo-modal .photo-help {font-size:11px;color:#778574;}
+.mori-photo-modal .photo-list-controls {
+  padding:12px 0;border-bottom:1px solid #e7decb;
+  font-size:12px;color:#526d58;gap:12px;
+}
+.mori-photo-modal .photo-figure{
+  background:#fffdf8;border:1px solid #e5daca;
+  border-radius:13px;box-shadow:0 5px 13px #5c4a290d;
+}
+.mori-photo-modal .photo-figure>a{height:190px;background:#e9e7da;}
+.mori-photo-modal .photo-figcaption{padding:12px 13px;gap:12px;}
+.mori-photo-modal .photo-figcaption b{font-size:12px;color:#425f46;}
+.mori-photo-modal .photo-figcaption span{font-size:12px;color:#667860;}
+.mori-photo-modal .photo-icon-button{background:#fefbf3;border-color:#e3dccd;color:#416448;}
+.mori-photo-modal .photo-icon-button:focus-visible,
+.mori-photo-modal :is(button,input,textarea,select):focus-visible,
+.calendar-page :is(button,select):focus-visible,
+.mori-planner-page :is(button,input,select,textarea):focus-visible {outline:2px solid #ad9260;outline-offset:2px;}
+.mori-photo-modal .photo-is-cover{background:#fcf2d7;color:#a17c38;border-color:#e7d49e;}
+.mori-photo-modal .photo-selected{border:2px solid #608c68;}
+.mori-photo-modal .photo-inline-edit{background:#f4f3e9;border-top-color:#e3dac8;padding:13px;}
+.mori-photo-modal .photo-comparison{
+  background:#f7f5ea;border:1px solid #e2d8c5;border-radius:14px;padding:20px;
+}
+.mori-photo-modal .photo-comparison h3{font-family:Georgia,serif;font-weight:400;font-size:22px;color:#284932;}
+.mori-photo-modal .photo-comparison img{border-radius:11px;background:#ecebdd;}
+.mori-photo-modal .photo-empty{
+  border:1px dashed #d4dbc5;background:linear-gradient(130deg,#f9f7ee,#ecf1e5);
+  padding:52px 20px;border-radius:15px;color:#68856e;
+}
+.mori-photo-modal .photo-empty strong{font-family:Georgia,serif;font-size:21px;font-weight:400;color:#2d5039;}
+.mori-photo-modal .photo-empty span{font-size:12px;}
+
+@media(max-width:900px){
+  .mori-planner-page .planner-actions{grid-column:1 / -1;}
+  .calendar-page .calendar-guide-metadata{max-width:100%;}
+}
+@media(max-width:650px){
+  .mori-planner-page .mori-planner-heading,.mori-calendar-heading{padding:22px;}
+  .mori-planner-page .planner-list{padding-left:17px;}
+  .mori-planner-page .planner-list::before{left:4px;}
+  .mori-planner-page .planner-item{grid-template-columns:1fr;padding:17px;}
+  .mori-planner-page .planner-item::before{left:-17px;width:10px;height:10px;}
+  .mori-planner-page .planner-date{border-right:0;border-bottom:1px solid #e8dfd0;padding:0 0 12px;flex-direction:row;flex-wrap:wrap;align-items:center;}
+  .mori-planner-page .planner-actions{grid-column:1;}
+  .calendar-page .calendar-summary-stats{grid-template-columns:1fr;}
+  .calendar-page .calendar-month{min-height:98px;padding:12px;}
+  .calendar-page .calendar-month.calendar-month-active{padding:12px;}
+  .calendar-page .calendar-month strong{font-size:14px;}
+  .mori-photo-heading{margin:-22px -22px 22px;padding:28px 53px 25px 22px;}
+  .mori-photo-modal .photo-upload-panel{padding:14px;}
+  .mori-photo-modal .photo-figure>a{height:160px;}
+}
+@media(prefers-reduced-motion:reduce){
+  .calendar-page .calendar-month {transition:none;}
+}

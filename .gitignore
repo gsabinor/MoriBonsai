@@ -1,0 +1,27 @@
+node_modules/
+dist/
+.env
+.env.local
+.env.*.local
+*.log
+.DS_Store
+.vscode/
+# Backups privados — não enviar ao GitHub
+mori-bonsai-backup-*.zip
+/backups/
+/dados-*.json
+
+# Outros formatos de exportação e dados pessoais locais
+/dados.json
+/dados-*.json
+/backups*/
+/exports*/
+/fotos/
+*.crdownload
+*.zip
+*.7z
+*.rar
+*.pem
+*.p12
+*.pfx
+*.key

@@ -1,0 +1,208 @@
+/* Mori Bonsai Web v1.3.0 — acabamento editorial das telas internas.
+   Não altera o painel aprovado da v1.1.2 nem lógica de persistência. */
+
+/* Cabeçalhos com uma pequena referência à floresta, sem sobrepor dados. */
+.mori-interior-heading {
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  min-height:152px;
+  padding:28px clamp(22px,2.5vw,36px);
+  background:linear-gradient(109deg,#102f25 0%,#184733 60%,#345941 100%);
+  border:1px solid #2c5541;
+  border-radius:19px;
+  box-shadow:0 12px 28px #1b35251b;
+  color:#f8eed4;
+  align-items:center;
+  margin-bottom:22px;
+}
+.mori-interior-heading::before {
+  content:"";
+  position:absolute;
+  inset:0 0 0 auto;
+  width:min(40%,390px);
+  background:url('./assets/watermark-bonsai.svg') right -36px bottom -110px / auto 255px no-repeat;
+  opacity:.14;
+  pointer-events:none;
+  z-index:-1;
+}
+.mori-library-heading::before {background-image:url('./assets/watermark-leaves.svg');background-size:auto 235px;background-position:right 9px center;opacity:.19}
+.mori-care-heading::before {background-image:url('./assets/watermark-mountains.svg');background-size:contain;background-position:right bottom;opacity:.34;width:min(65%,610px)}
+.mori-collection-heading::before {background-image:url('./assets/watermark-bonsai.svg');background-size:auto 235px;background-position:right -10px bottom -80px;opacity:.18}
+.mori-interior-heading h1 {
+  font-family:Georgia,serif;
+  color:#f7ebce;
+  margin:6px 0 9px;
+  font-size:clamp(29px,3vw,42px);
+  line-height:1.1;
+  font-weight:400;
+}
+.mori-interior-heading .eyebrow {color:#e2c993;letter-spacing:2px;font-size:10px}
+.mori-interior-heading p {font-size:13px;color:#e1e3d4;max-width:620px;line-height:1.65;margin:0}
+.mori-interior-heading .button-primary {
+  background:#f3e7ca;color:#19402e;border-color:#f3e7ca;
+  flex:0 0 auto;position:relative;
+}
+.mori-interior-heading .button-primary:hover {background:#fff7e5;color:#153a29}
+.mori-interior-metadata{display:flex;align-items:center;flex-wrap:wrap;gap:8px 18px;margin-top:17px}
+.mori-interior-metadata span{display:inline-flex;align-items:center;gap:7px;color:#dfdec2;font-size:11px}
+.mori-interior-metadata svg{color:#d0b36e}
+
+/* Biblioteca: navegação mais tranquila, identificação botânica em destaque. */
+.library-page .library-layout{grid-template-columns:minmax(218px,285px) minmax(0,1fr);gap:19px}
+.library-page .species-side,
+.library-page .library-workspace{
+  background:#fffcf4;
+  border:1px solid #e4d9c3;
+  box-shadow:0 7px 20px #564b2c0b;
+  border-radius:17px;
+}
+.library-page .species-side{padding:17px;top:15px}
+.library-page .species-side-top h2{font-family:Georgia,serif;font-size:21px;font-weight:400;color:#1c4130}
+.library-page .species-side-top span{font-family:'DM Sans',system-ui,sans-serif;font-weight:700;font-size:11px;background:#e8eddc;border-radius:10px;padding:4px 8px;margin-left:4px}
+.library-page .species-choice{border-radius:11px;padding:12px 9px;gap:11px}
+.library-page .species-choice:hover{background:#f5f1e3}
+.library-page .species-choice-active{background:#edf0e1;border-color:#d0d9be;box-shadow:inset 3px 0 #698767}
+.library-page .species-choice strong{font-size:13px;color:#214733}
+.library-page .species-choice small{font-family:Georgia,serif;font-style:italic;font-size:11px;line-height:1.5;color:#788779}
+.library-page .species-leaf{background:#e7eddc;color:#436d4a;border-radius:50%;width:38px;height:38px}
+.library-page .library-workspace{padding:25px}
+.library-species-heading{
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  padding:22px;
+  background:linear-gradient(125deg,#f1f0e3,#faf6e9 70%);
+  border:1px solid #e8ddc7;
+  border-radius:14px;
+  margin-bottom:17px;
+}
+.library-species-heading::after{content:"";position:absolute;inset:0 0 0 auto;width:140px;background:url('./assets/watermark-leaves.svg') center right / contain no-repeat;opacity:.26;pointer-events:none;z-index:-1}
+.mori-species-identity{display:flex;align-items:center;gap:16px;min-width:0}
+.mori-species-seal{flex:0 0 60px;width:60px;height:60px;display:grid;place-items:center;background:#e2ead4;color:#2e6744;border-radius:16px;border:1px solid #d0dcc7}
+.library-page .library-species-heading h2{font-family:Georgia,serif;font-weight:400;color:#203c2c;font-size:clamp(24px,2.3vw,34px);line-height:1.1;margin:7px 0}
+.library-page .library-species-heading em{font-family:Georgia,serif;color:#56735b;font-size:15px}
+.library-page .library-species-heading p{color:#718574;font-size:11px}
+.library-page .library-context{background:#f6f3e9;border:1px solid #e9e2d3;padding:17px;color:#536a54;font-size:13px;line-height:1.75}
+.library-page .library-linkbox{background:#f7f8ee;border-color:#dfe4d1;padding:17px;border-radius:13px}
+.library-page .library-linkbox>div:first-child{color:#2b5d40}
+.library-page .linked-row{background:#fffdf7;border-color:#e8e5d8}
+.library-page .library-section-top h3{font-family:Georgia,serif;font-size:23px;font-weight:400;color:#244333}
+.library-page .guide-metadata{background:#f8f5ec;border-color:#e6dfd1;border-radius:13px}
+.library-page .guide-metadata h4{font-family:Georgia,serif;font-size:17px;font-weight:400}
+.library-page .module-tabs{gap:8px;padding:8px 2px 13px}
+.library-page .module-tab{background:#f7f2e7;border-color:#e6ddc9;color:#5e715c;border-radius:10px;padding:11px 13px}
+.library-page .module-tab:hover{background:#eaeedc}
+.library-page .module-tab-active,.library-page .module-tab-active:hover{background:#214e38;color:#fdf5de;border-color:#214e38}
+.library-page .module-title{border-bottom:1px solid #e8e0d1;padding-bottom:14px;margin-bottom:18px}
+.library-page .module-title h3{font-family:Georgia,serif;font-size:22px;font-weight:400;margin:10px 0 4px}
+.library-page .module-title p{margin-bottom:0;font-size:12px}
+.library-page .guide-fields{gap:15px}
+.library-page .guide-field{background:linear-gradient(125deg,#fffdf8,#fffaf1);border:1px solid #e7ddca;border-radius:13px;padding:19px 20px;box-shadow:0 3px 11px #5c4b2c08}
+.library-page .guide-field-title{margin-bottom:16px;border-bottom:1px solid #eee7da;padding-bottom:13px}
+.library-page .guide-field-title>span:first-child{background:#e8eddc;color:#416b47;border-radius:50%;width:33px;height:33px}
+.library-page .guide-field-title h4{font-family:Georgia,serif;font-weight:400;font-size:18px;color:#244431}
+.library-page .guide-field label{font-size:12px;color:#59745b}
+.library-page .guide-field textarea,.library-page .guide-field select,
+.library-page .guide-metadata input,.library-page .guide-metadata textarea{
+  border:1px solid #dedbcc;background:#fffef9;color:#2b4434;border-radius:10px;
+  font-size:13px;padding:12px;line-height:1.62;
+}
+.library-page .guide-field [readonly],.library-page .guide-metadata [readonly]{background:#f5f5ed;color:#4b624e}
+.library-page .guide-field :is(input,textarea,select):focus-visible{outline:2px solid #779a77;outline-offset:2px}
+.library-page .guide-status{border-radius:999px;padding:8px 13px}
+.mori-guide-progress{padding:14px 17px;margin:12px 0 18px;background:#f1f4e7;border:1px solid #dce5cf;border-radius:13px}
+.mori-guide-progress-copy{display:flex;justify-content:space-between;align-items:center;gap:15px;font-size:12px;color:#506c51;margin-bottom:9px}
+.mori-guide-progress-copy strong{font-size:19px;font-family:Georgia,serif;font-weight:400;color:#2d5235}
+.mori-guide-progress-copy strong small{font-size:12px;color:#7f937e}
+.mori-guide-progress-track{height:7px;border-radius:999px;background:#dce2d1;overflow:hidden}
+.mori-guide-progress-track span{display:block;height:100%;background:linear-gradient(90deg,#5f8c5e,#aeae73);border-radius:inherit;transition:width .2s}
+
+/* A coleção: mais fotografia, menos aparência de cadastro administrativo. */
+.mori-collection-page .live-collection-grid{gap:19px}
+.mori-collection-page .live-plant-tile{background:#fffcf4;border-color:#e4d9c4;box-shadow:0 6px 20px #4a3c2415;transition:transform .18s, box-shadow .18s;}
+@media (hover:hover){.mori-collection-page .live-plant-tile:hover{transform:translateY(-3px);box-shadow:0 14px 28px #3b342020}}
+.mori-collection-page .live-tile-art{height:206px;position:relative;background:linear-gradient(155deg,#e7ead8,#efe9d4)}
+.mori-collection-page .live-tile-art:has(.mori-cover-placeholder){background:linear-gradient(160deg,#e7ebd8 8%,#f6efe0 90%)}
+.mori-collection-page .mori-cover-placeholder{width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;background:url('./assets/watermark-mountains.svg') center bottom / 100% auto no-repeat;color:#577653;filter:none}
+.mori-collection-page .mori-cover-placeholder svg{width:55px;height:55px;filter:drop-shadow(0 8px 6px #36503218)}
+.mori-collection-page .mori-cover-placeholder small{color:#6f846e;font-size:11px;letter-spacing:.2px;font-weight:500}
+.mori-collection-page .live-tile-content{padding:20px}
+.mori-collection-page .live-tile-content h3{font-size:23px;margin:8px 0 4px;color:#244531}
+.mori-collection-page .live-tile-content i{min-height:auto;font-family:Georgia,serif;font-size:13px;color:#73816c}
+.mori-collection-page .live-plant-code{color:#967c4d}
+.mori-collection-page .live-species-tag{background:#eaf0e1;color:#416746;border-radius:100px}
+.mori-collection-page .live-tile-content p{color:#617362;font-size:12px;margin:10px 0}
+.mori-collection-page .live-note{color:#64765c;line-height:1.65}
+.mori-collection-page .tile-actions{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px;padding-top:14px;border-top:1px solid #eee4d1}
+.mori-collection-page .tile-actions .button{display:flex;justify-content:center;align-items:center;gap:6px;min-width:0;padding:10px 7px;font-size:11px}
+.mori-collection-page .tile-actions .photo-open{flex-basis:auto;background:#eaf0e0;border-color:#dce6d0;color:#285338}
+.mori-collection-page .tile-actions .care-tile-button{flex-basis:auto}
+
+/* Histórico de manejos: cartões em uma linha de tempo sutil. */
+.mori-care-page .care-summary{gap:14px;margin:0 0 18px}
+.mori-care-page .care-summary>div{position:relative;isolation:isolate;overflow:hidden;gap:8px;min-height:123px;background:#fffbf1;border:1px solid #e5dbc7;border-radius:15px;padding:19px;box-shadow:0 4px 12px #473a1e0d}
+.mori-care-page .care-summary>div::after{content:"";position:absolute;z-index:-1;right:-10px;bottom:-32px;width:135px;height:125px;background:url('./assets/watermark-bonsai.svg') right bottom / contain no-repeat;opacity:.28;pointer-events:none}
+.mori-care-page .care-summary>div:nth-child(2)::after{background-image:url('./assets/watermark-leaves.svg');opacity:.22}
+.mori-care-page .care-summary>div:nth-child(3)::after{background-image:url('./assets/watermark-mountains.svg');width:160px;bottom:-25px;opacity:.22}
+.mori-care-page .care-summary strong{font-family:Georgia,serif;font-weight:400;font-size:32px;color:#214733}
+.mori-care-page .care-summary span{font-size:12px;color:#61745c}
+.mori-care-page .care-toolbar{background:#fcf9ef;padding:13px;border:1px solid #e9dfcd;border-radius:14px;margin:16px 0 10px}
+.mori-care-page .care-filter{background:#fffdf7;border-color:#e0dacb}
+.mori-care-page .care-caption{color:#798b75;margin:12px 0 17px}
+.mori-care-page .care-list{position:relative;gap:17px;padding-left:35px}
+.mori-care-page .care-list::before{content:"";position:absolute;left:13px;top:24px;bottom:24px;width:2px;background:linear-gradient(#c5d2b6,#e8dfcb);border-radius:999px}
+.mori-care-page .care-item{position:relative;background:linear-gradient(110deg,#fffcf5,#fff9ed);border:1px solid #e5dac6;border-radius:15px;padding:22px 23px;box-shadow:0 5px 14px #3b3b200d}
+.mori-care-page .care-timeline-dot{position:absolute;top:20px;left:-34px;width:28px;height:28px;background:#e4eacf;border:6px solid #f9f5e8;outline:2px solid #c2d0b7;border-radius:50%;z-index:1}
+.mori-care-page .care-item-head{border-bottom:1px solid #ece3d4;padding-bottom:13px}
+.mori-care-page .care-item h3{font-family:Georgia,serif;font-weight:400;font-size:21px;color:#244631;margin:15px 0 7px}
+.mori-care-page .care-type{border-radius:999px;background:#e9efe0;color:#3a6948;font-size:10px}
+.mori-care-page .care-outcome{border-radius:999px}
+.mori-care-page .care-date{font-size:12px;color:#627b65}
+.mori-care-page .care-plant{font-size:12px;color:#536e54}
+.mori-care-page .care-description{color:#526952;font-size:13px;line-height:1.75}
+.mori-care-page .care-result{background:#f1f3e8;border-left-color:#9cb99a;color:#3f6246}
+.mori-care-page .care-item-actions{border-top-color:#eee4d2}
+
+/* Modal de edição: consistência cromática, sem mudar os controles. */
+.app-shell .live-modal{background:#fffcf4;border:1px solid #e5d9c4}
+.app-shell .live-modal h2{font-family:Georgia,serif;font-size:27px;font-weight:400;color:#233e2e}
+.app-shell .live-modal .eyebrow{color:#96804d}
+.app-shell .plant-form input,.app-shell .plant-form select,.app-shell .plant-form textarea{background:#fffef9;border-color:#dfdbc9;color:#294333}
+
+@media(max-width:1180px){
+  .library-page .library-layout{grid-template-columns:235px minmax(0,1fr);gap:14px}
+  .library-page .library-workspace{padding:16px}
+}
+@media(max-width:800px){
+  .library-page .library-layout{grid-template-columns:1fr}
+  .library-page .species-side{position:static}
+  .library-page .species-items{max-height:190px}
+  .mori-interior-heading{align-items:flex-start;min-height:145px}
+  .mori-interior-heading::before{opacity:.08}
+}
+@media(max-width:620px){
+  .mori-interior-heading{padding:22px 19px;gap:16px}
+  .mori-interior-heading .button-primary{width:100%;justify-content:center}
+  .mori-interior-heading p{font-size:12px}
+  .mori-species-seal{flex-basis:44px;width:44px;height:44px}
+  .library-species-heading{padding:15px}
+  .library-page .library-species-heading h2{font-size:25px}
+  .library-page .guide-field{padding:15px}
+  .library-page .guide-field-grid{grid-template-columns:1fr}
+  .mori-care-page .care-summary{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .mori-care-page .care-summary>div:last-child{grid-column:span 2}
+  .mori-care-page .care-list{padding-left:28px}
+  .mori-care-page .care-list::before{left:9px}
+  .mori-care-page .care-timeline-dot{left:-29px;width:24px;height:24px}
+  .mori-care-page .care-item{padding:16px}
+}
+@media(max-width:390px){
+  .mori-collection-page .tile-actions{grid-template-columns:1fr 1fr}
+  .mori-collection-page .tile-actions .button{font-size:10px;gap:4px;padding:9px 5px}
+  .mori-care-page .care-summary{grid-template-columns:1fr}
+  .mori-care-page .care-summary>div:last-child{grid-column:auto}
+}
+@media(prefers-reduced-motion:reduce){
+  .mori-collection-page .live-plant-tile,.mori-guide-progress-track span{transition:none}
+}

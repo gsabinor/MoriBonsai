@@ -1,0 +1,339 @@
+/* MORI BONSAI · v1.1 — floresta editorial. Mantém a estrutura funcional da v1.0. */
+:root {
+  --forest:#13382b; --pine:#274d37; --green:#627b56; --mint:#e8eddc;
+  --border:#e5ddcc; --muted:#7d8a78; --ink:#28382b;
+  --surface:#fffaf0; --canvas:#f4f0e6;
+  font-family:'DM Sans',system-ui,-apple-system,'Segoe UI',sans-serif;
+  color:#29372a;
+  background:var(--canvas);
+}
+body {background:var(--canvas)}
+.main-column{background:linear-gradient(130deg,#f8f2e6 0%,#f2eee3 62%,#f6f2e7 100%)}
+.main-content{max-width:1600px;padding-top:24px}
+.sidebar { width:255px; flex-basis:255px; border-right:1px solid #b6a06a2e; color:#efe6c7; background: radial-gradient(circle at 20% 15%,#234b35 0%,transparent 34%),linear-gradient(156deg,#0b2b22 0%,#0f3125 65%,#071e19 100%); padding:22px 15px 18px; overflow-y:auto; scrollbar-width:thin; scrollbar-color:#65775d #0b2b22; }
+.sidebar::before{content:'';position:absolute;inset:0;z-index:-1;pointer-events:none;background:radial-gradient(circle at 20% 92%,#9e81471a,transparent 30%)}
+.mori-brand {width:100%;background:transparent;border:0;display:flex;flex-direction:column;gap:2px;align-items:center;padding:0 3px 27px;margin-bottom:15px;cursor:pointer;color:#f4e9c8;border-bottom:1px solid #d5b87936}
+.mori-brand:hover .brand-dragon{transform:scale(1.035)}
+.brand-dragon{width:104px;height:104px;object-fit:contain;transition:transform .2s}
+.mori-brand strong{font-family:Georgia,serif;font-size:20px;letter-spacing:1.5px;font-weight:500;color:#f6e8bd}
+.mori-brand small{color:#c3b58f;font-size:10px;letter-spacing:.6px;margin-top:5px}
+.sidebar-label{color:#b2bb9d;letter-spacing:1.9px;font-size:9px;padding:0 15px}
+.sidebar .nav-link{color:#e3e7d8;border-radius:10px;padding:12px 11px;font-weight:500;gap:12px;font-size:12px}
+.sidebar .nav-link svg{color:#d2b476;flex:none}
+.sidebar .nav-link:hover{background:#faf1d61b;color:#fff6de}
+.sidebar .nav-link-active,.sidebar .nav-link-active:hover{background:linear-gradient(100deg,#7381558a,#8b8a532f);color:#fff8dc}
+.mori-menu-soon{margin-left:auto;font-size:9px;color:#d7be88;opacity:.84}
+.sidebar-bottom{padding-top:18px}
+.mori-sidebar-decoration{height:95px;margin:0 0 12px;display:flex;flex-direction:column;justify-content:center;align-items:center;color:#c0ab6e;opacity:.76;background: radial-gradient(ellipse,#c4a55a19 0%,transparent 69%);border-top:1px solid #b99b5830;border-bottom:1px solid #b99b5830}
+.mori-sidebar-decoration span{font-family:Georgia,serif;font-size:42px;font-weight:400;line-height:1.1}
+.mori-sidebar-decoration small{letter-spacing:2px;text-transform:uppercase;font-size:8px}
+.sidebar-foot{padding:20px 10px 2px;color:#d0bb89;font-family:Georgia,serif;line-height:1.8;text-align:center;letter-spacing:.05px;font-size:11px;font-weight:400}
+.sidebar-foot strong{font-weight:400;color:#f4dca4;font-size:14px}
+.topbar{height:69px;background:#f9f5ec;border-color:var(--border);padding:0 clamp(18px,2.6vw,38px)}
+.topbar-left strong{color:#2d4533}.breadcrumb{color:#728477}.topbar-right .demo-pill{background:#eef0e2;border-color:#d9dfcb;color:#688066}
+.avatar{background:#dccda8;color:#284333}
+.mori-footer{padding-top:24px;border-top:1px solid #ded6c5;color:#72816c}.mori-footer span:first-child{color:#577052;font-family:Georgia,serif;font-size:12px}
+.mori-dashboard{display:grid;gap:16px}
+.mori-hero{height:296px;background-position:center;background-size:cover;position:relative;border-radius:18px;overflow:hidden;color:#f7efd4;box-shadow:0 14px 35px #24402a1c;display:flex;align-items:center;padding:24px 30px}
+.mori-hero-copy{z-index:1;max-width:55%;padding:0 0 0 5px}
+.mori-hero-eyebrow{font-size:10px;letter-spacing:2px;color:#ddc995;font-weight:700}
+.mori-hero h1{font-family:Georgia,serif;font-size:clamp(33px,3.7vw,57px);font-weight:400;line-height:1.04;letter-spacing:-1.1px;margin:12px 0}
+.mori-hero h1 em{font-weight:400;color:#e7d4a4}
+.mori-hero-copy p{font-size:13px;line-height:1.65;max-width:365px;color:#e2e1d0;margin-bottom:16px}
+.mori-hero-button{background:#f5ebcd;color:#1c3e2e;border:1px solid #f9eac5;padding:11px 17px;border-radius:9px;font-weight:700;font-size:12px;display:inline-flex;align-items:center;gap:10px}
+.mori-hero-button:hover{background:#fff8e7}
+.mori-hero-weather{position:absolute;right:22px;top:21px;width:235px;z-index:1}
+.mori-weather{border-radius:15px;background:#fbf4e8eb;backdrop-filter:blur(9px);border:1px solid #f0dfbfa0;box-shadow:0 7px 28px #091d152b;padding:15px;color:#2e3d2a}
+.weather-place{display:flex;align-items:center;gap:6px;font-size:10px;font-weight:800;letter-spacing:.1px}
+.weather-head{display:flex;align-items:center;gap:12px;margin-top:13px;color:#b58c39}
+.weather-head strong{font-family:Georgia,serif;color:#233a2a;font-size:39px;font-weight:400;line-height:1}
+.weather-condition{font-size:10px;margin:9px 0;color:#52664c}
+.weather-details{display:flex;flex-wrap:wrap;gap:6px 12px;font-size:9px;color:#52644e}
+.weather-details span{display:flex;gap:4px;align-items:center}
+.weather-range{font-size:10px;color:#587156;margin:10px 0 2px}
+.weather-time{display:block;font-size:9px;color:#87927c;margin:6px 0 0}
+.weather-source{display:inline-flex;align-items:center;gap:3px;margin-top:8px;color:#657c5c;font-size:9px;text-decoration:underline;text-underline-offset:2px}
+.weather-unavailable,.weather-error{font-size:11px;color:#6b7662;margin:17px 0;display:flex;gap:6px;align-items:center}
+.mori-stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}
+.mori-stat{border:1px solid #e7dcc6;background:linear-gradient(125deg,#fffcf5,#f7f0e1);border-radius:14px;min-height:87px;padding:12px 15px;display:flex;align-items:center;gap:13px;box-shadow:0 3px 8px #503c1610}
+.mori-stat-icon{flex:0 0 auto;width:48px;height:48px;display:grid;place-items:center;color:#3b6845;background:#e9eddc;border-radius:12px}
+.mori-stat div{display:flex;flex-direction:column;min-width:0}
+.mori-stat strong{font-family:Georgia,serif;font-size:28px;font-weight:400;line-height:1.1;color:#263e2c}
+.mori-stat div>span{font-size:10px;color:#6e7568;margin-top:4px;line-height:1.35}
+.mori-panels-row{display:grid;grid-template-columns:minmax(0,1.22fr) minmax(0,.95fr);gap:14px}
+.mori-panels-row.lower-row{grid-template-columns:minmax(0,1.22fr) minmax(0,.95fr)}
+.mori-panel{border:1px solid #e4d8c0;background:linear-gradient(155deg,#fffaf0,#f9f0e0);border-radius:15px;box-shadow:0 3px 9px #46391f12;padding:18px;min-width:0}
+.mori-panel-head{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:15px}
+.mori-panel-kicker{font-size:8px;color:#7d936c;letter-spacing:1.6px;font-weight:800}
+.mori-panel-head h2{font-family:Georgia,serif;font-size:19px;font-weight:500;color:#26362a;display:flex;align-items:center;gap:9px;margin:4px 0 0}
+.mori-panel-head h2 svg{color:#416e46}
+.mori-panel-caption{font-size:10px;color:#818473;white-space:nowrap}
+.mori-panel-link{display:flex;align-items:center;gap:5px;border:0;background:transparent;color:#315e3c;font-weight:700;font-size:10px;white-space:nowrap;padding:7px 3px}
+.mori-panel-link:hover{text-decoration:underline}
+.mori-chart{height:145px;display:flex;align-items:stretch;gap:8px;margin:10px 0 8px}
+.mori-chart-grid{width:22px;display:flex;justify-content:space-between;flex-direction:column;align-items:end;color:#9a987f;font-size:9px;padding-bottom:19px;position:relative}
+.mori-chart-bars{flex:1;display:flex;align-items:stretch;justify-content:space-around;gap:15px;border-bottom:1px solid #d8cfb8;background:linear-gradient(to top,transparent 33%,#e7e1d4 33%,#e7e1d4 calc(33% + 1px),transparent calc(33% + 1px),transparent 66%,#e7e1d4 66%,#e7e1d4 calc(66% + 1px),transparent calc(66% + 1px));padding:0 8px}
+.mori-chart-month{flex:1;min-width:0;display:flex;flex-direction:column;align-items:center}
+.mori-bar-track{height:125px;max-width:58px;width:100%;display:flex;align-items:flex-end}
+.mori-stacked-bar{width:100%;min-height:0;overflow:hidden;border-radius:4px 4px 0 0;display:flex;flex-direction:column-reverse;transition:height .2s}
+.mori-stacked-bar>span{width:100%}
+.mori-month-label{font-size:10px;margin:5px 0;color:#777a66;text-transform:capitalize}
+.mori-chart-legend{display:flex;justify-content:center;flex-wrap:wrap;gap:7px 14px;margin-top:13px}
+.mori-chart-legend span{font-size:9px;color:#5c705b;display:flex;gap:5px;align-items:center}
+.mori-chart-legend i{width:9px;height:9px;border-radius:50%}
+.mori-chart-empty{display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;color:#668769;min-height:170px}
+.mori-chart-empty p{margin:9px 0 3px;font-size:12px;font-weight:700;color:#506c54}
+.mori-chart-empty small{max-width:320px;font-size:10px;color:#8c9885;line-height:1.6}
+.mori-data-note,.mori-dashboard-warning{font-size:10px;color:#98694c;line-height:1.5}
+.mori-dashboard-warning{margin:0;background:#fff3d9;border:1px solid #ecdab6;border-radius:10px;padding:10px}
+.mori-upcoming-list{display:grid;gap:1px}
+.mori-upcoming-item{display:flex;gap:10px;align-items:center;border:0;border-bottom:1px solid #eae0d0;padding:10px 2px;text-align:left;background:transparent;color:#2c402e;width:100%}
+.mori-upcoming-item:last-child{border-bottom:0}
+.mori-upcoming-item:hover{background:#f6eedb}
+.mori-upcoming-icon{width:35px;height:35px;border-radius:8px;background:#e5ecd9;color:#4b7247;display:grid;place-items:center;flex:none}
+.mori-upcoming-copy{display:flex;flex:1;flex-direction:column;gap:2px;min-width:0}
+.mori-upcoming-copy b{font-size:11px}.mori-upcoming-copy small{font-size:10px;color:#8d917c;text-overflow:ellipsis;white-space:nowrap;overflow:hidden}
+.mori-upcoming-item time{font-size:10px;background:#e8ecd7;color:#526c47;padding:7px 9px;border-radius:15px;white-space:nowrap}
+.mori-upcoming-item time.mori-past-due{color:#9e5032;background:#fff0df}
+.mori-soft-empty{color:#80917b;font-size:11px;line-height:1.7;min-height:125px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:9px}
+.mori-soft-empty button{display:inline-flex;align-items:center;gap:7px;color:#395c3d;font-weight:700;background:transparent;border:0;text-decoration:underline;font-size:11px}
+.mori-featured-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.mori-feature{border:1px solid #e8dcc6;background:#fffdf6;padding:7px;border-radius:11px;display:flex;align-items:stretch;gap:10px;color:#28422e;min-width:0;text-align:left}
+.mori-feature:hover{background:#f4f0e3}
+.mori-feature-photo{flex:0 0 38%;height:125px;border-radius:7px;overflow:hidden;display:grid;place-items:center;color:#557958;background:#e0e8d4}
+.mori-feature-photo img{height:100%;width:100%;object-fit:cover}
+.mori-feature-copy{display:flex;flex-direction:column;gap:5px;align-items:flex-start;justify-content:center;min-width:0}
+.mori-feature-copy b{font-family:Georgia,serif;font-size:16px;font-weight:500;max-width:100%;overflow-wrap:anywhere}
+.mori-feature-copy i{font-family:Georgia,serif;font-size:10px;color:#737764;overflow-wrap:anywhere}
+.mori-feature-copy small{font-size:10px;background:#e9efdc;color:#577a4c;padding:5px 7px;border-radius:12px}
+.mori-feature-copy>span{display:flex;gap:4px;align-items:center;font-size:10px;color:#476e43;font-weight:700}
+.mori-wishlist-note{font-size:11px;color:#687661;line-height:1.5;margin:0 0 11px}
+.mori-wishlist-list{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}
+.mori-wishlist-list>div{display:flex;min-width:0;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:8px;padding:13px 5px;background:#f1eddc;border:1px solid #e9e0cc;border-radius:10px;color:#4a6f45}
+.mori-wishlist-list span{font-size:10px;color:#445941;line-height:1.4}
+.mori-wishlist-next{background:transparent;color:#607b53;font-size:10px;font-weight:800;border:0;display:flex;align-items:center;gap:7px;margin:12px 0 0 auto}
+.mori-history-shortcut{background:transparent;border:0;color:#658160;display:flex;align-items:center;gap:6px;justify-content:center;padding:2px;font-size:10px;margin:0 auto}
+.mori-preview-hero{border-radius:16px;background:linear-gradient(100deg,#123d2d,#426445);color:#f5ebd0;padding:45px 38px}
+.mori-preview-hero .eyebrow{color:#d4c590}.mori-preview-hero h1{font-family:Georgia,serif;font-size:clamp(31px,3vw,46px);font-weight:400;margin:0 0 8px}.mori-preview-hero p{font-size:13px;color:#e0e8d7;max-width:600px;line-height:1.6}
+.mori-preview-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:13px;margin-top:17px}
+.mori-preview-card{background:#fffaf0;border:1px solid #e3d7c1;border-radius:15px;padding:28px 22px}
+.mori-preview-card svg{color:#597a4f}.mori-preview-card h2{font-family:Georgia,serif;font-weight:400;font-size:22px;margin:18px 0 7px}.mori-preview-card p{font-size:12px;line-height:1.65;color:#7f8976}
+.mori-preview-notice{background:#e6ecd9;border:1px solid #d3dfc4;border-radius:11px;padding:16px;font-size:12px;color:#4f694d;margin:17px 0}
+/* Reestilização de telas de cadastro, biblioteca e módulos existentes */
+.section-card,.live-plant-tile,.live-modal,.live-empty,.live-message,.photo-card,.calendar-card{border-color:var(--border)}
+.page-heading h1,.live-tile-content h3,.section-title h2,.auth-card h2,.plant-form h2{font-family:Georgia,serif;font-weight:500;letter-spacing:-.4px}
+.page-heading h1{font-size:35px}
+.live-plant-tile{background:#fffcf4;box-shadow:0 4px 14px #413d2010}
+.live-tile-art{height:178px;background:linear-gradient(145deg,#dfe9d5,#ede3c8)}
+.live-tile-content h3{font-size:20px}
+.live-cover-image{width:100%;height:100%;object-fit:cover}
+.button-primary{background:#173d2b}.button-primary:hover{background:#2c6344}
+.button-outline{background:#fffaf0;border-color:#dbd7c8}
+.auth-screen.mori-auth-screen{background:#f4efe3}
+.auth-promo.mori-auth-promo{background-color:#123629;background-size:cover;background-position:65% center}
+.auth-brand.mori-auth-brand{display:flex;flex-direction:row;gap:14px;align-items:center}
+.auth-brand.mori-auth-brand .brand-dragon{height:80px;width:80px;flex:0 0 80px}
+.auth-brand.mori-auth-brand strong{font-family:Georgia,serif;font-size:19px;color:#f5e3bb;font-weight:400;letter-spacing:1.4px}
+.auth-brand.mori-auth-brand small{font-size:10px;color:#e3cfa0}
+.auth-promo.mori-auth-promo h1{font-family:Georgia,serif;font-size:clamp(40px,4vw,60px);font-weight:400;letter-spacing:-1.5px}
+.auth-promo.mori-auth-promo h1 em{color:#e9d3a0}
+.auth-promo.mori-auth-promo .eyebrow{color:#dfc58f}
+.auth-promo.mori-auth-promo .auth-promo-body p{color:#e5e4d0;font-size:14px}
+.mori-auth-signature{position:absolute;bottom:18px;left:35px;color:#efdcad;font-family:Georgia,serif;font-size:12px}
+.auth-card{background:#fffcf4;border-color:#e9dec9}
+@media(min-width:1550px){.main-content{max-width:1580px}}
+@media(max-width:1320px){.mori-panels-row,.mori-panels-row.lower-row{grid-template-columns:1fr}.mori-hero-weather{width:220px}.mori-feature-photo{height:130px}}
+@media(max-width:1000px){.sidebar{position:fixed;left:0;transform:translateX(-102%);transition:transform .22s;z-index:40;box-shadow:12px 0 36px #17342116}.sidebar-open{transform:translateX(0)}.mobile-backdrop{display:block;position:fixed;z-index:39;inset:0;background:#18382999;border:0;width:100%;height:100%}.mobile-menu{display:inline-grid}.mori-stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:700px){.mori-hero{height:auto;min-height:335px;align-items:flex-start;padding:27px 18px 150px;background-position:58% center}.mori-hero-copy{max-width:100%}.mori-hero h1{font-size:39px}.mori-hero-copy p{max-width:290px}.mori-hero-weather{top:auto;bottom:14px;right:12px;width:min(220px,60%)}.mori-weather{padding:9px 12px}.weather-head{margin-top:7px}.weather-head strong{font-size:29px}.weather-head svg{height:25px}.weather-details{display:none}.weather-range{font-size:9px;margin:6px 0 0}.weather-source,.weather-time{margin-top:4px}.mori-featured-grid{grid-template-columns:1fr}.mori-stat{padding:11px;gap:8px;min-height:76px}.mori-stat-icon{width:37px;height:37px}.mori-stat-icon svg{width:19px}.mori-stat strong{font-size:23px}.mori-stat div>span{font-size:9px}.mori-preview-grid{grid-template-columns:1fr}.mori-panels-row{gap:12px}.mori-panel{padding:15px}}
+@media(max-width:400px){.mori-hero{padding-bottom:145px}.mori-hero h1{font-size:34px}.mori-hero-copy p{font-size:11px}.mori-stat{padding:8px;gap:7px}.mori-wishlist-list{grid-template-columns:1fr}.mori-wishlist-list>div{flex-direction:row;justify-content:flex-start;padding:10px}}
+@media(prefers-reduced-motion:reduce){.brand-dragon,.mori-stacked-bar{transition:none}}
+.mori-demo-hero{background-color:#153c2b;background-size:cover;background-position:center;}
+.mori-demo-hero .hero-copy{max-width:440px}
+.mori-demo-hero .hero-kicker{color:#e1c995}
+.mori-demo-hero h1{font-family:Georgia,serif;font-weight:400;font-size:clamp(32px,3.4vw,50px);letter-spacing:-1px}
+.mori-demo-hero h1 em{color:#e9d3a0}
+.mori-demo-hero p{color:#e2dfcb}
+
+
+/* -----------------------------------------------------------------------
+ MORI BONSAI v1.1.1 — painel aprovado: 3 + 2 e ilustrações botânicas.
+ Os motivos são vetoriais e decorativos; não interferem no conteúdo.
+ A imagem original mori-forest-hero.webp não foi modificada.
+------------------------------------------------------------------------ */
+.mori-hero{
+  height:clamp(380px,30vw,438px);
+  min-height:380px;
+  background-position:center center;
+}
+.mori-hero-copy{max-width:52%}
+.mori-demo-hero{min-height:clamp(380px,30vw,438px);background-position:center center;}
+.mori-sidebar-decoration{height:73px;gap:0}
+.mori-sidebar-decoration span{font-size:43px;line-height:1}
+
+.mori-stats--illustrated{
+  display:grid;
+  grid-template-columns:repeat(12,minmax(0,1fr));
+  gap:14px;
+}
+.mori-stats--illustrated > .mori-stat{
+  grid-column:span 4;
+  position:relative;
+  z-index:0;
+  isolation:isolate;
+  min-width:0;
+  min-height:103px;
+  border:1px solid #e8dcc5;
+  overflow:hidden;
+  border-radius:15px;
+  background:linear-gradient(122deg,#fffdf6 0%,#f9f2e5 100%);
+  box-shadow:0 3px 9px #5a4a2012;
+  padding:18px 20px;
+  gap:16px;
+}
+.mori-stats--illustrated > .mori-stat::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  z-index:-1;
+  inset:0;
+  background-repeat:no-repeat;
+  background-position:right bottom;
+  background-size:auto 115%;
+  opacity:.72;
+}
+.mori-stats--illustrated > .mori-stat--bonsai::after{background-image:url('./assets/watermark-bonsai.svg');background-size:auto 124%;right:0}
+.mori-stats--illustrated > .mori-stat--species::after{
+  inset:auto 9px 6px auto;
+  width:min(36%,148px);
+  height:calc(100% - 12px);
+  background-image:url('./assets/watermark-leaves.svg');
+  background-size:contain;
+  background-position:right bottom;
+  opacity:.56;
+}
+.mori-stats--illustrated > .mori-stat--care::after{
+  inset:auto 8px 4px auto;
+  width:min(35%,145px);
+  height:calc(100% - 10px);
+  background-image:url('./assets/watermark-fern.svg');
+  background-size:contain;
+  background-position:right bottom;
+  opacity:.58;
+}
+.mori-stats--illustrated > .mori-stat--plans{
+  grid-column:span 5;
+  min-height:147px;
+  align-items:flex-start;
+  padding-top:25px;
+}
+.mori-stats--illustrated > .mori-stat--plans::after{
+  background-image:url('./assets/watermark-mountains.svg');
+  background-size:100% auto;
+  background-position:bottom center;
+  opacity:.85;
+}
+.mori-stats--illustrated .mori-stat-icon{
+  width:56px;height:56px;border-radius:13px;
+  color:#2d6b43;background:#e9eeda;
+  flex:0 0 56px;
+}
+.mori-stats--illustrated .mori-stat strong{font-size:32px;color:#183b2c}
+.mori-stats--illustrated .mori-stat div>span{font-size:12px;color:#455c49}
+.mori-stats--illustrated .mori-stat--plans strong{font-size:34px}
+
+.mori-weather-card{
+  grid-column:span 7;
+  min-width:0;
+  min-height:147px;
+  position:relative;
+  isolation:isolate;
+  overflow:hidden;
+  border:1px solid #e6dbc5;
+  border-radius:15px;
+  background:linear-gradient(110deg,#fffdf5 0%,#f6f3e7 62%,#e7ecd7 100%);
+  box-shadow:0 3px 9px #5a4a2012;
+}
+.mori-weather-card::after{
+  content:"";
+  position:absolute;
+  pointer-events:none;
+  z-index:-1;
+  inset:0;
+  background:url('./assets/watermark-weather.svg') bottom right / 100% 100% no-repeat;
+  opacity:.55;
+}
+.mori-weather-card .mori-weather{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+  column-gap:16px;
+  align-items:center;
+  position:relative;
+  z-index:1;
+  border:0;
+  border-radius:0;
+  background:transparent;
+  backdrop-filter:none;
+  box-shadow:none;
+  padding:16px 20px 13px 22px;
+  min-height:100%;
+  color:#27442e;
+}
+.mori-weather-primary{min-width:0}
+.mori-weather-card .weather-place{font-size:11px;color:#2f4b37;letter-spacing:0}
+.mori-weather-card .weather-head{margin:9px 0 0;gap:12px}
+.mori-weather-card .weather-head svg{color:#c59c42;flex:0 0 auto}
+.mori-weather-card .weather-head strong{font-size:43px;line-height:1.05;white-space:nowrap}
+.mori-weather-card .weather-condition{margin:4px 0;font-size:10px;color:#526d58}
+.mori-weather-card .weather-time{font-size:9px;margin-top:4px;color:#687f6d}
+.mori-weather-secondary{
+  min-width:0;
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  gap:8px;
+  padding:2px 0 2px 17px;
+  border-left:1px solid #dfdfc9;
+  background:transparent;
+  border-radius:0;
+}
+.mori-weather-secondary span{display:flex;align-items:center;gap:9px;color:#304d3b;font-size:11px;white-space:nowrap}
+.mori-weather-secondary svg{flex:0 0 auto;color:#386e55}
+.mori-weather-card .weather-source{grid-column:1/-1;justify-self:start;margin-top:3px;font-size:9px;color:#5e795a}
+.mori-weather-card .weather-unavailable,.mori-weather-card .weather-error{font-size:11px;margin:10px 0}
+
+/* Respiro ao reduzir a janela, sem cortar os textos ou esconder o clima. */
+@media(max-width:1230px){
+  .mori-stats--illustrated > .mori-stat{grid-column:span 6}
+  .mori-stats--illustrated > .mori-stat--plans{grid-column:span 6}
+  .mori-weather-card{grid-column:span 12;min-height:145px}
+}
+@media(max-width:740px){
+  .mori-hero{height:auto;min-height:340px;padding:28px 20px;align-items:center;background-position:center center}
+  .mori-hero-copy{max-width:83%}
+  .mori-demo-hero{height:auto;min-height:330px;background-position:center center}
+  .mori-stats--illustrated{gap:11px}
+  .mori-stats--illustrated > .mori-stat{padding:13px;gap:11px;min-height:92px}
+  .mori-stats--illustrated .mori-stat-icon{width:42px;height:42px;flex-basis:42px}
+  .mori-stats--illustrated .mori-stat-icon svg{height:21px;width:21px}
+  .mori-stats--illustrated .mori-stat strong{font-size:26px}
+  .mori-stats--illustrated .mori-stat div>span{font-size:10px}
+  .mori-stats--illustrated > .mori-stat--plans{min-height:108px}
+  .mori-weather-card .mori-weather{padding:15px 14px;gap:12px}
+}
+@media(max-width:540px){
+  .mori-hero{min-height:340px;padding:22px 18px;background-position:58% center}
+  .mori-hero-copy{max-width:100%}
+  .mori-stats--illustrated > .mori-stat{grid-column:span 12;min-height:86px}
+  .mori-stats--illustrated > .mori-stat--plans{grid-column:span 12;min-height:116px}
+  .mori-weather-card{grid-column:span 12}
+  .mori-weather-card .mori-weather{grid-template-columns:1fr 1fr;padding:15px;column-gap:8px}
+  .mori-weather-card .weather-head strong{font-size:35px}
+  .mori-weather-card .weather-head svg{width:31px;height:31px}
+  .mori-weather-secondary{padding-left:9px;gap:8px}
+  .mori-weather-secondary span{font-size:9px;gap:4px;white-space:normal}
+  .mori-weather-secondary svg{width:13px;height:13px}
+}
+@media(max-width:365px){
+  .mori-weather-card .mori-weather{grid-template-columns:1fr;gap:12px}
+  .mori-weather-secondary{border:0;padding:0;display:grid;grid-template-columns:1fr 1fr}
+}
